@@ -11,6 +11,7 @@ namespace ProyectoFinal.Interface
         int AddConsumo(Consumo model);
         int EditConsumo(int idconsumo, Consumo model);
         int DeleteConsumo(int idconsumo);
-        IEnumerable<Consumo> GetConsumos();
+        IEnumerable<Consumo> GetConsumos(string sorter);
+        Consumo GetConsumoById(int idconsumo);
     }
 }

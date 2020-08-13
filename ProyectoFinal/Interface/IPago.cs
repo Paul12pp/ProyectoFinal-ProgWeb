@@ -11,6 +11,7 @@ namespace ProyectoFinal.Interface
         int AddPago(Pago model);
         int EditPago(int idpago, Pago model);
         int DeletePago(int idpago);
-        IEnumerable<Pago> GetPagos();
+        IEnumerable<Pago> GetPagos(string sorter);
+        Pago GetPagoById(int idpago);
     }
 }

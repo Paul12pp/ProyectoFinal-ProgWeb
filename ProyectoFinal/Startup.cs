@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoFinal.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProyectoFinal.Interface;
 
 namespace ProyectoFinal
 {
@@ -39,6 +40,9 @@ namespace ProyectoFinal
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddScoped<IPago, PagoRepository>();
+            services.AddScoped<IConsumo, ConsumoRepository>();
+            services.AddScoped<IGasto, GastoRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

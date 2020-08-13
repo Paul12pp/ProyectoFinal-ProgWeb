@@ -4,110 +4,103 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProyectoFinal.Interface;
+using ProyectoFinal.Models;
 
 namespace ProyectoFinal.Controllers
 {
     public class MantenimientoController : Controller
     {
+        private readonly IConsumo _consumo;
+        private readonly IPago _pago;
+        public MantenimientoController(IConsumo consumo, IPago pago)
+        {
+            _consumo = consumo;
+            _pago = pago;
+        }
         // GET: Mantenimiento
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Mantenimiento/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: Mantenimiento/Create
-        public ActionResult CreatePago()
+        public ActionResult CreatePago(int? id, string sortOrder)
         {
+            ViewData["CodeSort"] = String.IsNullOrEmpty(sortOrder) ? "code_desc" : "";
+            ViewData["DateSort"] = sortOrder == "date" ? "date_desc" : "date";
+            ViewData["DescripSort"] = sortOrder == "descrip" ? "descrip_desc" : "descrip";
+            if (id!=null)
+            {
+                ViewBag.Pagos = sortOrder != "" ? _pago.GetPagos(sortOrder) : _pago.GetPagos("");
+                return View(_pago.GetPagoById(id.Value));
+            }
+            ViewBag.Pagos = sortOrder != "" ? _pago.GetPagos(sortOrder) : _pago.GetPagos("");
             return View();
         }
 
-        public ActionResult CreateConsumo()
+        public ActionResult CreateConsumo(int? id, string sortOrder)
         {
+            ViewData["CodeSort"] = String.IsNullOrEmpty(sortOrder) ? "code_desc" : "";
+            ViewData["DateSort"] = sortOrder == "date" ? "date_desc" : "date";
+            ViewData["DescripSort"] = sortOrder == "descrip" ? "descrip_desc" : "descrip";
+            if (id != null)
+            {
+                ViewBag.Consumos = sortOrder != "" ? _consumo.GetConsumos(sortOrder) : _consumo.GetConsumos("");
+                return View(_consumo.GetConsumoById(id.Value));
+            }
+            ViewBag.Consumos = sortOrder != "" ? _consumo.GetConsumos(sortOrder) : _consumo.GetConsumos("");
             return View();
         }
 
         // POST: Mantenimiento/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreatePago(IFormCollection collection)
+        public ActionResult CreatePago(Pago collection)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                var result = collection.IdPago != 0 
+                    ? _pago.EditPago(collection.IdPago, collection) 
+                    : _pago.AddPago(collection);
+                if (result == 200)
+                    return RedirectToAction("CreatePago");
+                return View(collection);
             }
-            catch
-            {
-                return View();
-            }
+            return View(collection);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateConsumo(IFormCollection collection)
+        public ActionResult CreateConsumo(Consumo collection)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
+                var result = collection.IdConsumo != 0
+                    ? _consumo.EditConsumo(collection.IdConsumo, collection)
+                    : _consumo.AddConsumo(collection);
+                if (result == 200)
+                    return RedirectToAction("CreateConsumo");
+                return View(collection);
             }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Mantenimiento/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Mantenimiento/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View(collection);
         }
 
         // GET: Mantenimiento/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeletePago(int id)
         {
-            return View();
+            var result = _pago.DeletePago(id);
+            if(result==200)
+                return RedirectToAction("CreatePago");
+            return RedirectToAction("CreatePago");
         }
 
-        // POST: Mantenimiento/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        // GET: Mantenimiento/Delete/5
+        public ActionResult DeleteConsumo(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var result = _consumo.DeleteConsumo(id);
+            if (result == 200)
+                return RedirectToAction("CreateConsumo");
+            return RedirectToAction("CreateConsumo");
         }
     }
 }
