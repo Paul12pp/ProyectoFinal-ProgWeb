@@ -2,39 +2,119 @@
     ViewData["Title"] = "Home Page";
 }
 
-<link href="~/css/gastos.css" rel="stylesheet" />
-<div class="container">
 
-    <ul class="responsive-table">
-        <li class="table-header">
-            <div class="col col-1">Job Id</div>
-            <div class="col col-2">Customer Name</div>
-            <div class="col col-3">Amount Due</div>
-            <div class="col col-4">Payment Status</div>
-        </li>
-        <li class="table-row">
-            <div class="col col-1" data-label="Job Id">42235</div>
-            <div class="col col-2" data-label="Customer Name">John Doe</div>
-            <div class="col col-3" data-label="Amount">$350</div>
-            <div class="col col-4" data-label="Payment Status">Pending</div>
-        </li>
-        <li class="table-row">
-            <div class="col col-1" data-label="Job Id">42442</div>
-            <div class="col col-2" data-label="Customer Name">Jennifer Smith</div>
-            <div class="col col-3" data-label="Amount">$220</div>
-            <div class="col col-4" data-label="Payment Status">Pending</div>
-        </li>
-        <li class="table-row">
-            <div class="col col-1" data-label="Job Id">42257</div>
-            <div class="col col-2" data-label="Customer Name">John Smith</div>
-            <div class="col col-3" data-label="Amount">$341</div>
-            <div class="col col-4" data-label="Payment Status">Pending</div>
-        </li>
-        <li class="table-row">
-            <div class="col col-1" data-label="Job Id">42311</div>
-            <div class="col col-2" data-label="Customer Name">John Carpenter</div>
-            <div class="col col-3" data-label="Amount">$115</div>
-            <div class="col col-4" data-label="Payment Status">Pending</div>
-        </li>
-    </ul>
-</div>
+
+<title>Estado financiero mensual</title>
+
+<link href="C:\Users\Darlenys Mayers\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\css\bootstrap.css" rel="stylesheet" />
+<script src="C:\Users\Darlenys Mayers\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\js\bootstrap.js"></script>
+<script src="https://kit.fontawesome.com/yourcode.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet" />
+
+
+<div style="margin-top: 65px;"></div>
+
+
+
+<div class="container">
+    <form>
+
+        <div class="form-group col-md-4"">
+            <label for="" class="col">Consumo</label>
+            <div class="col">
+                <input class="form-control" type="text" placeholder="Default input">
+            </div>
+        </div>
+
+        <div style="margin-top: 35px;"></div>
+
+        <div class="form-group col-md-4">
+            <label for="" class="col">Tipo de gasto</label>
+            <div class="col">
+                <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet" />
+                <select class="form-control" style="font-family: 'FontAwesome', 'Second Font name'">
+                    <option>&#xf53a; Efectivo</option>
+                    <option>&#xf53a; Transferencia</option>
+                    <option> &#xf53a; Tarjeta debito</option>
+                    <option>&#xf53a; Tarjeta redito</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="input-group col-md-4">
+            <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+                <span class="input-group-text">0.00</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+        </div>
+
+    </form>
+
+    <div style="margin-top: 35px;"></div>
+
+    <div class="custom-file">
+        <input type="file" class="custom-file-input" id="inputGroupFile01">
+        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+    </div>
+
+
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Observaciones</span>
+        </div>
+        <textarea class="form-control" aria-label="With textarea"></textarea>
+    </div>
+
+        <div style="margin-top: 15px;"></div>
+
+        <button type="button" class="btn btn-success">Agregar</button>
+        <button type="button" class="btn btn-warning">Cancelar</button>
+
+
+
+    </div>
+
+
+
+
+    <div style="margin-top: 65px;"></div>
+
+    <label for="" class="col">Gastos Totales</label>
+
+
+    <div class="container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    
+                    <th scope="col">Tipo de Consumo</th>
+                    <th scope="col">Tipo de pago</th>
+                    <th scope="col">Cantidad total</th>
+                    <th scope="col">Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row"><i class="fas fa-ambulance"></i> Farmacia</th>
+                    <td><i class="fas fa-ambulance">Efectivo</td>
+                    <td>12,000</td>
+                    <td>N/A</td>
+                   
+                </tr>
+                <tr>
+                    <th scope="row"><i class="fas fa-ambulance"></i> Farmacia</th>
+                    <td><i class="fas fa-ambulance">Efectivo</td>
+                    <td>12,000</td>
+                    <td>N/A</td>
+                </tr>
+                <tr>
+                    <th scope="row"><i class="fas fa-ambulance"></i> Farmacia</th>
+                    <td><i class="fas fa-ambulance">Efectivo</td>
+                    <td>12,000</td>
+                    <td>N/A</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
