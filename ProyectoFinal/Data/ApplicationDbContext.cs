@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ProyectoFinal.Models;
 
 namespace ProyectoFinal.Data
 {
@@ -12,5 +13,8 @@ namespace ProyectoFinal.Data
             : base(options)
         {
         }
+        public DbSet<Gasto> Gastos { get; set; }
+        public DbSet<Consumo> Consumos { get; set; }
+        public DbSet<Pago> Pagos { get; set; }
     }
 }
