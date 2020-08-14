@@ -44,6 +44,13 @@ namespace ProyectoFinal.Controllers
             }
         }
 
+        public IActionResult Dashboard()
+        {
+            ViewData["Message"] = "Dashboard.";
+
+            return View();
+        }
+
         // GET: Gasto/Edit/5
         public ActionResult Edit(int id)
         {

@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Gasto\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="C:\Users\USER\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\css\bootstrap-grid.css" Link="wwwroot\css\bootstrap-grid.css" />
     <Content Update="C:\Users\USER\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\css\bootstrap-grid.css.map" Link="wwwroot\css\bootstrap-grid.css.map" />
     <Content Update="C:\Users\USER\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\css\bootstrap-grid.min.css" Link="wwwroot\css\bootstrap-grid.min.css" />
@@ -37,6 +33,9 @@
     <Content Update="C:\Users\USER\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\js\bootstrap.js.map" Link="wwwroot\js\bootstrap.js.map" />
     <Content Update="C:\Users\USER\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\js\bootstrap.min.js" Link="wwwroot\js\bootstrap.min.js" />
     <Content Update="C:\Users\USER\.nuget\packages\bootstrap\4.5.2\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" Link="wwwroot\js\bootstrap.min.js.map" />
+    <Content Update="Views\Gasto\Dashboard.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
   </ItemGroup>
 
 </Project>

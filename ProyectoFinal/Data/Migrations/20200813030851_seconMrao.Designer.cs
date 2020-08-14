@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoFinal.Data;
 
 namespace ProyectoFinal.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200813030851_seconMrao")]
+    partial class seconMrao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,13 +192,11 @@ namespace ProyectoFinal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descripcion")
-                        .IsRequired();
+                    b.Property<string>("Descripcion");
 
                     b.Property<DateTime>("FechaCreacion");
 
-                    b.Property<string>("Imagen")
-                        .IsRequired();
+                    b.Property<string>("Imagen");
 
                     b.HasKey("IdConsumo");
 
@@ -236,13 +236,11 @@ namespace ProyectoFinal.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Descripcion")
-                        .IsRequired();
+                    b.Property<string>("Descripcion");
 
                     b.Property<DateTime>("FechaCreacion");
 
-                    b.Property<string>("Imagen")
-                        .IsRequired();
+                    b.Property<string>("Imagen");
 
                     b.HasKey("IdPago");
 
