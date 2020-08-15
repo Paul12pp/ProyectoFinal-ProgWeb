@@ -1,0 +1,94 @@
+﻿@model ProyectoFinal.Models.Gasto
+
+@{
+    ViewData["Title"] = "Gasto";
+}
+
+<div class="container">
+    <h4>Gasto</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label asp-for="Fecha" class="control-label"></label>
+                        <input asp-for="Fecha" class="form-control fecha-gasto" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
+                        <span asp-validation-for="Fecha" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="Monto" class="control-label"></label>
+                        <input asp-for="Monto" class="form-control" type="number" />
+                        <span asp-validation-for="Monto" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label asp-for="IdConsumo" class="control-label"></label>
+                        <select asp-for="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo,"IdConsumo","Descripcion"))"></select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="IdPago" class="control-label"></label>
+                        <select asp-for="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago,"IdPago","Descripcion"))"></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label asp-for="Observacion" class="control-label"></label>
+                        @*<input asp-for="Observacion" class="form-control" />*@
+                        <textarea asp-for="Observacion" class="form-control"></textarea>
+                        <span asp-validation-for="Observacion" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Guardar" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive-sm">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <a asp-action="Create" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
+                        </th>
+                        <th>
+                            <a asp-action="Create" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
+                        </th>
+                        <th>
+                            <a asp-action="Create" asp-route-sortOrder="@ViewData["UserSort"]">Usuario</a>
+                        </th>
+                        <th>Monto</th>
+                        <th>Tipo Consumo</th>
+                        <th>Tipo Pago</th>
+                        <th>Observación</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.Gastos)
+                    {
+                        <tr>
+                            <td>@item.IdGasto</td>
+                            <td>@item.Fecha</td>
+                            <td width="25%"></td>
+                            <td>@item.Fecha</td>
+                            <td>
+                                <a asp-action="CreatePago" asp-route-id="@item.IdGasto" class="btn btn-warning">Editar</a>
+                                <a asp-action="DeletePago" asp-route-id="@item.IdGasto" class="btn btn-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

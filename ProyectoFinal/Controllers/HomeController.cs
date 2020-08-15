@@ -12,7 +12,7 @@ namespace ProyectoFinal.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Dashboard", "Gasto");
         }
 
         public IActionResult About()

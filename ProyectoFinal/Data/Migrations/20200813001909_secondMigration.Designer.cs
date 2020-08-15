@@ -136,7 +136,7 @@ namespace ProyectoFinal.Data.Migrations
                     b.ToTable("AspNetUserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUsers<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128);

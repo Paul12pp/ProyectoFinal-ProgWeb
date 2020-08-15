@@ -3,16 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ProyectoFinal.Interface;
+using ProyectoFinal.Models;
 
 namespace ProyectoFinal.Controllers
 {
     public class GastoController : Controller
     {
+        private readonly IGasto _gasto;
+        private readonly IConsumo _consumo;
+        private readonly IPago _pago;
+        public GastoController(IGasto gasto, IConsumo consumo,
+            IPago pago)
+        {
+            _gasto = gasto;
+            _consumo = consumo;
+            _pago = pago;
+        }
         // GET: Gasto
         public ActionResult Index()
         {
-            return View();
+            return RedirectToAction("Create");
         }
 
         // GET: Gasto/Details/5
@@ -24,24 +37,18 @@ namespace ProyectoFinal.Controllers
         // GET: Gasto/Create
         public ActionResult Create()
         {
+            ViewBag.IdConsumo = _consumo.GetConsumos("").AsEnumerable();
+            ViewBag.IdPago = _pago.GetPagos("").AsEnumerable();
+            ViewBag.Gastos = _gasto.GetGastos();
             return View();
         }
 
         // POST: Gasto/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Gasto collection)
         {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View();
         }
 
         public IActionResult Dashboard()

@@ -72,8 +72,8 @@
                             </td>
                             <td>@item.FechaCreacion</td>
                             <td>
-                                <a asp-action="CreatePago" asp-route-id="@item.IdPago">Editar</a>
-                                <a asp-action="DeletePago" asp-route-id="@item.IdPago">Eliminar</a>
+                                <a asp-action="CreatePago" asp-route-id="@item.IdPago" class="btn btn-warning">Editar</a>
+                                <a asp-action="DeletePago" asp-route-id="@item.IdPago" class="btn btn-danger">Eliminar</a>
                             </td>
                         </tr>
                     }

@@ -73,8 +73,8 @@
                                 </td>
                                 <td>@item.FechaCreacion</td>
                                 <td>
-                                    <a asp-action="CreatePago" asp-route-id="@item.IdConsumo">Editar</a>
-                                    <a asp-action="DeletePago" asp-route-id="@item.IdConsumo">Eliminar</a>
+                                    <a asp-action="CreatePago" asp-route-id="@item.IdConsumo" class="btn btn-warning">Editar</a>
+                                    <a asp-action="DeletePago" asp-route-id="@item.IdConsumo" class="btn btn-danger">Eliminar</a>
                                 </td>
                             </tr>
                         }

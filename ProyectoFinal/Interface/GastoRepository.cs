@@ -71,7 +71,8 @@ namespace ProyectoFinal.Interface
 
         public IEnumerable<Gasto> GetGastos()
         {
-            throw new NotImplementedException();
+            return _appDbContext.Gastos
+                .ToList();
         }
 
         public IEnumerable<Gasto> GetGastosByConsumo(int idconsumo)
