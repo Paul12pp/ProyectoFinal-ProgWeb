@@ -4,8 +4,8 @@
     ViewData["Title"] = "Gasto";
 }
 
-<div class="container">
-    <h4>Gasto</h4>
+@*<div class="container">
+   
     <hr />
     <div class="row">
         <div class="col-md-8">
@@ -38,7 +38,7 @@
                     <div class="form-group col-md-8">
                         <label asp-for="Observacion" class="control-label"></label>
                         @*<input asp-for="Observacion" class="form-control" />*@
-                        <textarea asp-for="Observacion" class="form-control"></textarea>
+                        @*<textarea asp-for="Observacion" class="form-control"></textarea>
                         <span asp-validation-for="Observacion" class="text-danger"></span>
                     </div>
                 </div>
@@ -89,6 +89,126 @@
     </div>
 </div>
 
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }
+
+@* Nuevo cambio inicio *@
+<div class="d-flex" id="content-wrapper">
+    <!-- Page Content -->
+    <div id="content" class="bg-grey w-100">
+        <section class="bg-light py-3 mt-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-8">
+                        <h1 class="font-weight-bold mb-0">Gastos</h1>
+                        <p class="lead text-muted">Agrega tus gastos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-mix py-3">
+            <div class="container">
+                <div class="card rounded-0">
+                    <div class="card-body">
+                        <div class="row">
+
+                            <div class="form-group col-md-5">
+                                <label asp-for="Fecha" class="control-label"></label>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label asp-for="Monto" class="control-label"></label>
+                            </div>
+
+                            <div class="form-group col-md-5">
+                                <input asp-for="Fecha" type="date" class="form-control fecha-gasto" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
+                                <span asp-validation-for="Fecha" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="input-group col-md-6">
+                                <div class="input-group-prepend">
+                                    <span class="input-money-text">$</span>
+                                </div>
+                                <input asp-for="Monto" class="form-control" type="number" aria-label="cantidad de gasto" />
+                                <span asp-validation-for="Monto" class="text-danger"></span>
+                            </div>
+
+
+                            <div class="form-row col-md-12">
+                                <div class="form-group col-md-5">
+                                    <label asp-for="IdConsumo" class="control-label"></label>
+                                    <select asp-for="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo,"IdConsumo","Descripcion"))"></select>
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label asp-for="IdPago" class="control-label"></label>
+                                    <select asp-for="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago,"IdPago","Descripcion"))"></select>
+                                </div>
+                            </div>
+                            <div class="form-row col-md-12">
+                                <div class="form-group col-md-12">
+                                    <label asp-for="Observacion" class="control-label"></label>
+                                    @*<input asp-for="Observacion" class="form-control" />*@
+                                    <textarea asp-for="Observacion" class="form-control"></textarea>
+                                    <span asp-validation-for="Observacion" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <input type="submit" value="Guardar" class="btn btn-primary" />
+                            </div>
+                           
+                        </div>
+                    </div>
+                  
+                        
+                            <table class="table col-md-12">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            <a asp-action="Create" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
+                                        </th>
+                                        <th>
+                                            <a asp-action="Create" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
+                                        </th>
+                                        <th>
+                                            <a asp-action="Create" asp-route-sortOrder="@ViewData["UserSort"]">Usuario</a>
+                                        </th>
+                                        <th>Monto</th>
+                                        <th>Tipo Consumo</th>
+                                        <th>Tipo Pago</th>
+                                        <th>Observación</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.Gastos)
+                                    {
+                                        <tr>
+                                            <td>@item.IdGasto</td>
+                                            <td>@item.Fecha</td>
+                                            <td width="25%"></td>
+                                            <td>@item.Fecha</td>
+                                            <td>
+                                                <a asp-action="CreatePago" asp-route-id="@item.IdGasto" class="btn btn-warning">Editar</a>
+                                                <a asp-action="DeletePago" asp-route-id="@item.IdGasto" class="btn btn-danger">Eliminar</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+
+
+                </div>
+        </section>
+      
+    </div>
+</div>
+@* Nuevo cambio final *@
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+

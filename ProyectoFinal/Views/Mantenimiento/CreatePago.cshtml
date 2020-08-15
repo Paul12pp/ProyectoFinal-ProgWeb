@@ -4,7 +4,7 @@
     ViewData["Title"] = "CreatePago";
 }
 
-<div class="container">
+@*<div class="container">
     <h2>Pagos</h2>
     <hr />
     <div class="row">
@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group">
                     @*<label asp-for="FechaCreacion" class="control-label"></label>*@
-                    <input asp-for="FechaCreacion" class="form-control" hidden value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
+                    @*<input asp-for="FechaCreacion" class="form-control" hidden value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
                     <span asp-validation-for="FechaCreacion" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -82,7 +82,149 @@
             </table>
         </div>
     </div>
+</div>*@
+
+
+
+
+
+
+@* Nuevo cambio inicio *@
+<div class="d-flex" id="content-wrapper">
+    <!-- Page Content -->
+    <div id="content" class="bg-grey w-100">
+        <section class="bg-light py-3 mt-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-8">
+                        <h1 class="font-weight-bold mb-0">Pagos</h1>
+                        <p class="lead text-muted">Agrega tus pagos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-mix py-3">
+            <div class="container">
+                <div class="card rounded-0">
+                    <div class="card-body">
+                        <div class="row">
+
+
+                            <div class="col-md-12">
+                                <form asp-action="CreatePago">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group col-md-6">
+                                        @if (Model != null && Model.IdPago != 0)
+                                        {
+                                            <input asp-for="IdPago" hidden />
+                                        }
+                                        <label asp-for="Descripcion" class="control-label"></label>
+                                        <input asp-for="Descripcion" class="form-control" />
+                                        <span asp-validation-for="Descripcion" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label asp-for="Imagen" class="control-label"></label>
+                                    </div>
+
+                                    <div class="custom-mar col-md-4">
+                                        <input asp-for="Imagen" class="custom-file-input" type="file" id="validatedCustomFile" required>
+                                        <label asp-for="Imagen" class="custom-file-label" for="validatedCustomFile">Elegir una imagen...</label>
+                                        <span asp-validation-for="Imagen" class="text-danger"></span>
+                                        <div class="invalid-feedback">No ha elegido una imagen</div>
+                                    </div>
+                                   
+                                    <div class="form-group col-md-6">
+                                        @*<label asp-for="FechaCreacion" class="control-label"></label>*@
+                                        <input asp-for="FechaCreacion" class="form-control" hidden value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
+                                        <span asp-validation-for="FechaCreacion" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @if (Model != null && Model.IdPago != 0)
+                                        {
+                                            <input type="submit" value="Actualizar" class="btn btn-primary" />
+                                        }
+                                        else
+                                        {
+                                            <input type="submit" value="Guardar" class="btn btn-primary" />
+                                        }
+                                    </div>
+                                </form>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+
+
+                    <table class="table col-md-12">
+
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <a asp-action="CreatePago" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
+                                    </th>
+                                    <th>
+                                        <a asp-action="CreatePago" asp-route-sortOrder="@ViewData["DescripSort"]">Descripción</a>
+                                    </th>
+                                    <th>Imagen</th>
+                                    <th>
+                                        <a asp-action="CreatePago" asp-route-sortOrder="@ViewData["DateSort"]">Fecha creación</a>
+                                    </th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.Pagos)
+                                {
+                                    <tr>
+                                        <td>@item.IdPago</td>
+                                        <td>@item.Descripcion</td>
+                                        <td width="25%">
+                                            <img src="@item.Imagen" alt="@item.Descripcion" width="20%" />
+                                        </td>
+                                        <td>@item.FechaCreacion</td>
+                                        <td>
+                                            <a asp-action="CreatePago" asp-route-id="@item.IdPago" class="btn btn-warning">Editar</a>
+                                            <a asp-action="DeletePago" asp-route-id="@item.IdPago" class="btn btn-danger">Eliminar</a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                   
+
+                    </table>
+
+
+
+
+
+
+
+                </div>
+        </section>
+
+    </div>
 </div>
+@* Nuevo cambio final *@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
