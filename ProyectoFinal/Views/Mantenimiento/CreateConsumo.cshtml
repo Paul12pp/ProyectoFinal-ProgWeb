@@ -119,32 +119,28 @@
                                         <span asp-validation-for="Descripcion" class="text-danger"></span>
                                     </div>
 
+
                                     <div class="form-group col-md-6">
-                                        <label asp-for="Imagen" class="control-label"></label>
-                                        </div>
+                                        <label asp-for="Imagen" for="validatedCustomFile">Url de la imagen</label>
+                                        <input asp-for="Imagen" type="text" class="form-control" id="validatedCustomFile" placeholder="Elegir una imagen...">
+                                        <div class="invalid-feedback">No ha elegido una imagen</div>
+                                    </div>
 
-                                        <div class="custom-mar col-md-4">
-                                            <input asp-for="Imagen" class="custom-file-input" type="file" id="validatedCustomFile" required>
-                                            <label asp-for="Imagen" class="custom-file-label" for="validatedCustomFile">Elegir una imagen...</label>
-                                            <span asp-validation-for="Imagen" class="text-danger"></span>
-                                            <div class="invalid-feedback">No ha elegido una imagen</div>
-                                        </div>
-
-                                        <div class="form-group col-md-12">
-                                            @*<label asp-for="FechaCreacion" class="control-label"></label>*@
-                                            <input asp-for="FechaCreacion" class="form-control" hidden value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
-                                            <span asp-validation-for="FechaCreacion" class="text-danger"></span>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @if (Model != null && Model.IdConsumo != 0)
-                                            {
-                                                <input type="submit" value="Actualizar" class="btn btn-primary" />
-                                            }
-                                            else
-                                            {
-                                                <input type="submit" value="Guardar" class="btn btn-primary" />
-                                            }
-                                        </div>
+                                    <div class="form-group col-md-12">
+                                        @*<label asp-for="FechaCreacion" class="control-label"></label>*@
+                                        <input asp-for="FechaCreacion" class="form-control" hidden value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
+                                        <span asp-validation-for="FechaCreacion" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @if (Model != null && Model.IdConsumo != 0)
+                                        {
+                                            <input type="submit" value="Actualizar" class="btn btn-primary" />
+                                        }
+                                        else
+                                        {
+                                            <input type="submit" value="Guardar" class="btn btn-primary" />
+                                        }
+                                    </div>
                                 </form>
                             </div>
 
