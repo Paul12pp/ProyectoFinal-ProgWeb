@@ -15,12 +15,14 @@ namespace ProyectoFinal.Controllers
         private readonly IGasto _gasto;
         private readonly IConsumo _consumo;
         private readonly IPago _pago;
+        private readonly UserManager<IdentityUser> _userManager;
         public GastoController(IGasto gasto, IConsumo consumo,
-            IPago pago)
+            IPago pago, UserManager<IdentityUser> userManager)
         {
             _gasto = gasto;
             _consumo = consumo;
             _pago = pago;
+            _userManager = userManager;
         }
         // GET: Gasto
         public ActionResult Index()
@@ -35,11 +37,25 @@ namespace ProyectoFinal.Controllers
         }
 
         // GET: Gasto/Create
-        public ActionResult Create()
+        public async Task<IActionResult> Create(int? id, string sortOrder, 
+            int? pageNumber)
         {
-            ViewBag.IdConsumo = _consumo.GetConsumos("").AsEnumerable();
-            ViewBag.IdPago = _pago.GetPagos("").AsEnumerable();
-            ViewBag.Gastos = _gasto.GetGastos();
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CodeSort"] = String.IsNullOrEmpty(sortOrder) ? "code_desc" : "";
+            ViewData["DateSort"] = sortOrder == "date" ? "date_desc" : "date";
+            ViewData["UserSort"] = sortOrder == "user" ? "user_desc" : "user";
+            ViewData["MontoSort"] = sortOrder == "monto" ? "monto_desc" : "monto";
+            ViewData["ConsumoSort"] = sortOrder == "consumo" ? "consumo_desc" : "consumo";
+            ViewData["PagoSort"] = sortOrder == "pago" ? "pago_desc" : "pago";
+            ViewBag.IdConsumo = _consumo.GetConsumos("");
+            ViewBag.IdPago = _pago.GetPagos("");
+            int pageSize = 5;
+            var data = sortOrder != "" ? _gasto.GetGastosP(sortOrder) : _gasto.GetGastosP("");
+            ViewBag.Gastos = await PaginatedList<Gasto>.CreateAsync(data, pageNumber ?? 1, pageSize);
+            if (id != null)
+            {
+                return View( _gasto.GetGastoById(id.Value));
+            }
             return View();
         }
 
@@ -48,13 +64,34 @@ namespace ProyectoFinal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Gasto collection)
         {
-            return View();
+            var user =  _userManager.GetUserId(HttpContext.User);
+            collection.IdUsuario = user;
+            if (ModelState.IsValid)
+            {
+                var result = collection.IdGasto != 0
+                    ? _gasto.EditGasto(collection.IdGasto, collection)
+                    : _gasto.AddGasto(collection);
+                if (result == 200)
+                    return Redirect("/Gasto/Create/");
+                return View(collection);
+            }
+            return View(collection);
         }
 
         public IActionResult Dashboard()
         {
             ViewData["Message"] = "Dashboard.";
-
+            ViewData["GastoT"] = _gasto.GetGastos("")
+                .Sum(r => r.Monto);
+            ViewData["GastoM"] = _gasto.GetGastos("")
+                .Where(r => r.Fecha.Month == DateTime.Now.Month)
+                .Sum(r => r.Monto);
+            ViewData["Observaciones"] = _gasto.GetGastos("")
+                .Where(r => r.Observacion != "")
+                .Count();
+            ViewBag.GastosR = _gasto.GetGastos("date_desc")
+                .Take(4);
+            ViewBag.Consumos = _consumo.GetConsumos("");
             return View();
         }
 
@@ -84,24 +121,10 @@ namespace ProyectoFinal.Controllers
         // GET: Gasto/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
-        }
-
-        // POST: Gasto/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var result = _gasto.DeleteGasto(id);
+            if (result == 200)
+                return RedirectToAction("Create");
+            return RedirectToAction("Create");
         }
     }
 }

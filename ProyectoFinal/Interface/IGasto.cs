@@ -11,7 +11,9 @@ namespace ProyectoFinal.Interface
         int AddGasto(Gasto model);
         int EditGasto(int idgasto, Gasto model);
         int DeleteGasto(int idgasto);
-        IEnumerable<Gasto> GetGastos();
+        Gasto GetGastoById(int idgasto);
+        IEnumerable<Gasto> GetGastos(string sorter);
+        IQueryable<Gasto> GetGastosP(string sorter);
         IEnumerable<Gasto> GetGastosByConsumo(int idconsumo);
         IEnumerable<Gasto> GetGastosByPago(int idpago);
         IEnumerable<Gasto> GetGastosByFilter(string sorter);

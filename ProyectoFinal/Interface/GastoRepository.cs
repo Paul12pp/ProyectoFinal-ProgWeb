@@ -69,10 +69,55 @@ namespace ProyectoFinal.Interface
             }
         }
 
-        public IEnumerable<Gasto> GetGastos()
+        public Gasto GetGastoById(int idgasto)
         {
             return _appDbContext.Gastos
-                .ToList();
+                .FirstOrDefault(r => r.IdGasto == idgasto)
+;        }
+
+        public IEnumerable<Gasto> GetGastos(string sorter)
+        {
+            var pagos = _appDbContext.Gastos.ToList();
+            switch (sorter)
+            {
+                case "code_desc":
+                    pagos = pagos.OrderByDescending(s => s.IdGasto).ToList();
+                    break;
+                case "date":
+                    pagos = pagos.OrderBy(s => s.Fecha).ToList();
+                    break;
+                case "date_desc":
+                    pagos = pagos.OrderByDescending(s => s.Fecha).ToList();
+                    break;
+                case "user":
+                    pagos = pagos.OrderBy(s => s.IdUsuario).ToList();
+                    break;
+                case "user_desc":
+                    pagos = pagos.OrderByDescending(s => s.IdUsuario).ToList();
+                    break;
+                case "monto":
+                    pagos = pagos.OrderBy(s => s.Monto).ToList();
+                    break;
+                case "monto_desc":
+                    pagos = pagos.OrderByDescending(s => s.Monto).ToList();
+                    break;
+                case "consumo":
+                    pagos = pagos.OrderBy(s => s.IdConsumo).ToList();
+                    break;
+                case "consumo_desc":
+                    pagos = pagos.OrderByDescending(s => s.IdConsumo).ToList();
+                    break;
+                case "pago":
+                    pagos = pagos.OrderBy(s => s.IdPago).ToList();
+                    break;
+                case "pago_desc":
+                    pagos = pagos.OrderByDescending(s => s.IdPago).ToList();
+                    break;
+                default:
+                    pagos = pagos.OrderBy(s => s.IdGasto).ToList();
+                    break;
+            }
+            return pagos;
         }
 
         public IEnumerable<Gasto> GetGastosByConsumo(int idconsumo)
@@ -88,6 +133,53 @@ namespace ProyectoFinal.Interface
         public IEnumerable<Gasto> GetGastosByPago(int idpago)
         {
             throw new NotImplementedException();
+        }
+
+        public IQueryable<Gasto> GetGastosP(string sorter)
+        {
+            var pagos = from s in _appDbContext.Gastos
+                             select s;
+            switch (sorter)
+            {
+                case "code_desc":
+                    pagos = pagos.OrderByDescending(s => s.IdGasto);
+                    break;
+                case "date":
+                    pagos = pagos.OrderBy(s => s.Fecha);
+                    break;
+                case "date_desc":
+                    pagos = pagos.OrderByDescending(s => s.Fecha);
+                    break;
+                case "user":
+                    pagos = pagos.OrderBy(s => s.IdUsuario);
+                    break;
+                case "user_desc":
+                    pagos = pagos.OrderByDescending(s => s.IdUsuario);
+                    break;
+                case "monto":
+                    pagos = pagos.OrderBy(s => s.Monto);
+                    break;
+                case "monto_desc":
+                    pagos = pagos.OrderByDescending(s => s.Monto);
+                    break;
+                case "consumo":
+                    pagos = pagos.OrderBy(s => s.IdConsumo);
+                    break;
+                case "consumo_desc":
+                    pagos = pagos.OrderByDescending(s => s.IdConsumo);
+                    break;
+                case "pago":
+                    pagos = pagos.OrderBy(s => s.IdPago);
+                    break;
+                case "pago_desc":
+                    pagos = pagos.OrderByDescending(s => s.IdPago);
+                    break;
+                default:
+                    pagos = pagos.OrderBy(s => s.IdGasto);
+                    break;
+            }
+            return pagos;
+
         }
     }
 }

@@ -64,7 +64,7 @@ namespace ProyectoFinal.Controllers
                     ? _pago.EditPago(collection.IdPago, collection) 
                     : _pago.AddPago(collection);
                 if (result == 200)
-                    return RedirectToAction("CreatePago");
+                    return Redirect("/Mantenimiento/CreatePago/");
                 return View(collection);
             }
             return View(collection);
@@ -79,7 +79,7 @@ namespace ProyectoFinal.Controllers
                     ? _consumo.EditConsumo(collection.IdConsumo, collection)
                     : _consumo.AddConsumo(collection);
                 if (result == 200)
-                    return RedirectToAction("CreateConsumo");
+                    return Redirect("/Mantenimiento/CreateConsumo/");
                 return View(collection);
             }
             return View(collection);

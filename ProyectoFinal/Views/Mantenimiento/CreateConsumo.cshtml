@@ -121,11 +121,7 @@
 
                                     <div class="form-group col-md-6">
                                         <label asp-for="Imagen" class="control-label"></label>
-                                        </div>
-
-                                        <div class="custom-mar col-md-4">
-                                            <input asp-for="Imagen" class="custom-file-input" type="file" id="validatedCustomFile" required>
-                                            <label asp-for="Imagen" class="custom-file-label" for="validatedCustomFile">Elegir una imagen...</label>
+                                            <input asp-for="Imagen" class="form-control">
                                             <span asp-validation-for="Imagen" class="text-danger"></span>
                                             <div class="invalid-feedback">No ha elegido una imagen</div>
                                         </div>
@@ -183,8 +179,8 @@
                                         </td>
                                         <td>@item.FechaCreacion</td>
                                         <td>
-                                            <a asp-action="CreatePago" asp-route-id="@item.IdConsumo" class="btn btn-warning">Editar</a>
-                                            <a asp-action="DeletePago" asp-route-id="@item.IdConsumo" class="btn btn-danger">Eliminar</a>
+                                            <a asp-action="CreateConsumo" asp-route-id="@item.IdConsumo" class="btn btn-warning">Editar</a>
+                                            <a asp-action="DeleteConsumo" asp-route-id="@item.IdConsumo" class="btn btn-danger">Eliminar</a>
                                         </td>
                                     </tr>
                                 }

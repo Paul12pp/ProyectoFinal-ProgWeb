@@ -1,11 +1,13 @@
 ﻿@model ProyectoFinal.Models.Gasto
+@using Microsoft.AspNetCore.Identity
 
+@inject UserManager<IdentityUser> UserManager
 @{
     ViewData["Title"] = "Gasto";
 }
 
 @*<div class="container">
-   
+
     <hr />
     <div class="row">
         <div class="col-md-8">
@@ -38,59 +40,59 @@
                     <div class="form-group col-md-8">
                         <label asp-for="Observacion" class="control-label"></label>
                         @*<input asp-for="Observacion" class="form-control" />*@
-                        @*<textarea asp-for="Observacion" class="form-control"></textarea>
-                        <span asp-validation-for="Observacion" class="text-danger"></span>
+@*<textarea asp-for="Observacion" class="form-control"></textarea>
+                            <span asp-validation-for="Observacion" class="text-danger"></span>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Guardar" class="btn btn-primary" />
-                </div>
-            </form>
+                    <div class="form-group">
+                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="table-responsive-sm">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">
-                            <a asp-action="Create" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
-                        </th>
-                        <th>
-                            <a asp-action="Create" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
-                        </th>
-                        <th>
-                            <a asp-action="Create" asp-route-sortOrder="@ViewData["UserSort"]">Usuario</a>
-                        </th>
-                        <th>Monto</th>
-                        <th>Tipo Consumo</th>
-                        <th>Tipo Pago</th>
-                        <th>Observación</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in ViewBag.Gastos)
-                    {
+        <div class="row">
+            <div class="table-responsive-sm">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>@item.IdGasto</td>
-                            <td>@item.Fecha</td>
-                            <td width="25%"></td>
-                            <td>@item.Fecha</td>
-                            <td>
-                                <a asp-action="CreatePago" asp-route-id="@item.IdGasto" class="btn btn-warning">Editar</a>
-                                <a asp-action="DeletePago" asp-route-id="@item.IdGasto" class="btn btn-danger">Eliminar</a>
-                            </td>
+                            <th scope="col">
+                                <a asp-action="Create" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
+                            </th>
+                            <th>
+                                <a asp-action="Create" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
+                            </th>
+                            <th>
+                                <a asp-action="Create" asp-route-sortOrder="@ViewData["UserSort"]">Usuario</a>
+                            </th>
+                            <th>Monto</th>
+                            <th>Tipo Consumo</th>
+                            <th>Tipo Pago</th>
+                            <th>Observación</th>
+                            <th>Acción</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.Gastos)
+                        {
+                            <tr>
+                                <td>@item.IdGasto</td>
+                                <td>@item.Fecha</td>
+                                <td width="25%"></td>
+                                <td>@item.Fecha</td>
+                                <td>
+                                    <a asp-action="CreatePago" asp-route-id="@item.IdGasto" class="btn btn-warning">Editar</a>
+                                    <a asp-action="DeletePago" asp-route-id="@item.IdGasto" class="btn btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
 
-@* Nuevo cambio inicio *@
+    @* Nuevo cambio inicio *@
 <div class="d-flex" id="content-wrapper">
     <!-- Page Content -->
     <div id="content" class="bg-grey w-100">
@@ -108,98 +110,156 @@
             <div class="container">
                 <div class="card rounded-0">
                     <div class="card-body">
-                        <div class="row">
-
-                            <div class="form-group col-md-5">
-                                <label asp-for="Fecha" class="control-label"></label>
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label asp-for="Monto" class="control-label"></label>
-                            </div>
-
-                            <div class="form-group col-md-5">
-                                <input asp-for="Fecha" type="date" class="form-control fecha-gasto" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
-                                <span asp-validation-for="Fecha" class="text-danger"></span>
-                            </div>
-
-
-                            <div class="input-group col-md-6">
-                                <div class="input-group-prepend">
-                                    <span class="input-money-text">$</span>
-                                </div>
-                                <input asp-for="Monto" class="form-control" type="number" aria-label="cantidad de gasto" />
-                                <span asp-validation-for="Monto" class="text-danger"></span>
-                            </div>
-
-
-                            <div class="form-row col-md-12">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            @if (Model != null && Model.IdGasto != 0)
+                            {
+                                <input asp-for="IdGasto" hidden />
+                            }
+                            <div class="row">
                                 <div class="form-group col-md-5">
-                                    <label asp-for="IdConsumo" class="control-label"></label>
-                                    <select asp-for="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo,"IdConsumo","Descripcion"))"></select>
+                                    <label asp-for="Fecha" class="control-label"></label>
                                 </div>
+
+                                <div class="form-group col-md-4">
+                                    <label asp-for="Monto" class="control-label"></label>
+                                </div>
+
                                 <div class="form-group col-md-5">
-                                    <label asp-for="IdPago" class="control-label"></label>
-                                    <select asp-for="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago,"IdPago","Descripcion"))"></select>
-                                </div>
-                            </div>
-                            <div class="form-row col-md-12">
-                                <div class="form-group col-md-12">
-                                    <label asp-for="Observacion" class="control-label"></label>
-                                    @*<input asp-for="Observacion" class="form-control" />*@
-                                    <textarea asp-for="Observacion" class="form-control"></textarea>
-                                    <span asp-validation-for="Observacion" class="text-danger"></span>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <input type="submit" value="Guardar" class="btn btn-primary" />
-                            </div>
-                           
-                        </div>
-                    </div>
-                  
-                        
-                            <table class="table col-md-12">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">
-                                            <a asp-action="Create" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
-                                        </th>
-                                        <th>
-                                            <a asp-action="Create" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
-                                        </th>
-                                        <th>
-                                            <a asp-action="Create" asp-route-sortOrder="@ViewData["UserSort"]">Usuario</a>
-                                        </th>
-                                        <th>Monto</th>
-                                        <th>Tipo Consumo</th>
-                                        <th>Tipo Pago</th>
-                                        <th>Observación</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in ViewBag.Gastos)
+                                    @if (Model != null && Model.IdGasto != 0)
                                     {
-                                        <tr>
-                                            <td>@item.IdGasto</td>
-                                            <td>@item.Fecha</td>
-                                            <td width="25%"></td>
-                                            <td>@item.Fecha</td>
-                                            <td>
-                                                <a asp-action="CreatePago" asp-route-id="@item.IdGasto" class="btn btn-warning">Editar</a>
-                                                <a asp-action="DeletePago" asp-route-id="@item.IdGasto" class="btn btn-danger">Eliminar</a>
-                                            </td>
-                                        </tr>
+                                        <input asp-for="Fecha" type="date" class="form-control fecha-gasto" readonly max="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
                                     }
-                                </tbody>
-                            </table>
+                                    else
+                                    {
+                                        <input asp-for="Fecha" type="date" class="form-control fecha-gasto" max="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture)" />
+                                    }
+                                    <span asp-validation-for="Fecha" class="text-danger"></span>
+                                </div>
 
+                                <div class="input-group col-md-6">
+                                    <div class="input-group-prepend">
+                                        <span class="input-money-text">$</span>
+                                    </div>
+                                    @if (Model != null && Model.IdGasto != 0)
+                                    {
+                                        <input asp-for="Monto" class="form-control" type="number" aria-label="cantidad de gasto" value="@Convert.ToInt32(Model.Monto)" />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Monto" class="form-control" type="number" aria-label="cantidad de gasto" />
+                                    }
+                                    <span asp-validation-for="Monto" class="text-danger"></span>
+                                </div>
 
+                                <div class="form-row col-md-12">
+                                    <div class="form-group col-md-5">
+                                        <label asp-for="IdConsumo" class="control-label"></label>
+                                        <select asp-for="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo,"IdConsumo","Descripcion"))"></select>
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        <label asp-for="IdPago" class="control-label"></label>
+                                        <select asp-for="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago,"IdPago","Descripcion"))"></select>
+                                    </div>
+                                </div>
+                                <div class="form-row col-md-12">
+                                    <div class="form-group col-md-12">
+                                        <label asp-for="Observacion" class="control-label"></label>
+                                        @*<input asp-for="Observacion" class="form-control" />*@
+                                        <textarea asp-for="Observacion" class="form-control"></textarea>
+                                        <span asp-validation-for="Observacion" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    @if (Model != null && Model.IdGasto != 0)
+                                    {
+                                        <input type="submit" value="Actualizar" class="btn btn-primary" />
+                                    }
+                                    else
+                                    {
+                                        <input type="submit" value="Guardar" class="btn btn-primary" />
+                                    }
+                                </div>
+                            </div>
+                        </form>
+                    </div>
 
+                    <table class="table col-md-12">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <a asp-action="Create" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Create" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Create" asp-route-sortOrder="@ViewData["UserSort"]">Usuario</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Create" asp-route-sortOrder="@ViewData["MontoSort"]">Monto</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Create" asp-route-sortOrder="@ViewData["ConsumoSort"]">
+                                        Tipo Consumo
+                                    </a>
+                                </th>
+                                <th>
+                                    <a asp-action="Create" asp-route-sortOrder="@ViewData["PagoSort"]">
+                                        Tipo Pago
+                                    </a>
+                                </th>
+                                <th>Observación</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.Gastos)
+                            {
+                                <tr>
+                                    @{
+                                        string id = item.IdUsuario;
+                                        IEnumerable<Consumo> consnumos = ViewBag.IdConsumo;
+                                        IEnumerable<Pago> pagos = ViewBag.IdPago;
+                                    }
+                                    <td>@item.IdGasto</td>
+                                    <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@UserManager.Users.FirstOrDefault(r => r.Id == id).UserName</td>
+                                    <td>$@item.Monto</td>
+                                    <td>@consnumos.FirstOrDefault(r => r.IdConsumo == item.IdConsumo).Descripcion</td>
+                                    <td>@pagos.FirstOrDefault(r => r.IdPago == item.IdPago).Descripcion</td>
+                                    <td>@item.Observacion</td>
+                                    <td>
+                                        <a asp-action="Create" asp-route-id="@item.IdGasto" class="btn btn-warning">Editar</a>
+                                        <a asp-action="Delete" asp-route-id="@item.IdGasto" class="btn btn-danger">Eliminar</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @{
+                        var prevDisabled = !ViewBag.Gastos.HasPreviousPage ? "disabled" : "";
+                        var nextDisabled = !ViewBag.Gastos.HasNextPage ? "disabled" : "";
+                    }
+                    <div class="text-center">
+                        <a asp-action="Create"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-pageNumber="@(ViewBag.Gastos.PageIndex - 1)"
+                           class="btn btn-primary @prevDisabled">
+                            Atrás
+                        </a>
+                        <a asp-action="Create"
+                           asp-route-sortOrder="@ViewData["CurrentSort"]"
+                           asp-route-pageNumber="@(ViewBag.Gastos.PageIndex + 1)"
+                           class="btn btn-primary @nextDisabled">
+                            Adelante
+                        </a>
+                    </div>
+                    
                 </div>
+            </div>
         </section>
-      
+
     </div>
 </div>
 @* Nuevo cambio final *@
