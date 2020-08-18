@@ -127,9 +127,33 @@ namespace ProyectoFinal.Interface
                .ToList();
         }
 
-        public IEnumerable<Gasto> GetGastosByFilter(string sorter)
+        public IQueryable<Gasto> GetGastosByFilter(string sorter, int? id)
         {
-            throw new NotImplementedException();
+            var gastos = from s in _appDbContext.Gastos
+                        select s;
+            switch (sorter)
+            {
+                case "month":
+                    gastos = gastos
+                        .Where(m => m.Fecha.Month == DateTime.Now.Month);
+                    break;
+                case "total":
+                    
+                    break;
+                case "consumo":
+                    gastos = gastos
+                        .Where(m => m.IdConsumo==id);
+                    break;
+                case "pago":
+                    gastos = gastos
+                        .Where(m => m.IdPago == id);
+                    break;
+                default:
+                    gastos = gastos.OrderBy(s => s.IdGasto);
+                    break;
+
+            }
+            return gastos;
         }
 
         public IEnumerable<Gasto> GetGastosByPago(int idpago)

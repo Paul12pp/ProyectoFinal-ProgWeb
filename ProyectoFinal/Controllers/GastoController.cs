@@ -32,9 +32,24 @@ namespace ProyectoFinal.Controllers
         }
 
         // GET: Gasto/Details/5
-        public ActionResult Details(int id)
+        public async Task<IActionResult> Details(string filter, int? consumo,
+            int? pago, int? pageNumber, string sortOrder)
         {
-            return View();
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CodeSort"] = String.IsNullOrEmpty(sortOrder) ? "code_desc" : "";
+            ViewData["DateSort"] = sortOrder == "date" ? "date_desc" : "date";
+            ViewData["UserSort"] = sortOrder == "user" ? "user_desc" : "user";
+            ViewData["MontoSort"] = sortOrder == "monto" ? "monto_desc" : "monto";
+            ViewData["ConsumoSort"] = sortOrder == "consumo" ? "consumo_desc" : "consumo";
+            ViewData["PagoSort"] = sortOrder == "pago" ? "pago_desc" : "pago";
+            var type = consumo != null ? consumo : pago;
+            var gastos = filter != ""
+                ? _gasto.GetGastosByFilter(filter, type)
+                : sortOrder != "" ? _gasto.GetGastosP(sortOrder) : _gasto.GetGastosP("");
+            ViewBag.IdConsumo = _consumo.GetConsumos("");
+            ViewBag.IdPago = _pago.GetPagos("");
+            int pageSize = 5;
+            return View(await PaginatedList<Gasto>.CreateAsync(gastos, pageNumber ?? 1, pageSize));
         }
 
         // GET: Gasto/Create

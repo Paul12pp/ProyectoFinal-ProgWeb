@@ -16,6 +16,6 @@ namespace ProyectoFinal.Interface
         IQueryable<Gasto> GetGastosP(string sorter);
         IEnumerable<Gasto> GetGastosByConsumo(int idconsumo);
         IEnumerable<Gasto> GetGastosByPago(int idpago);
-        IEnumerable<Gasto> GetGastosByFilter(string sorter);
+        IQueryable<Gasto> GetGastosByFilter(string sorter, int? id);
     }
 }

@@ -113,6 +113,7 @@
         //});
         $("#Pago-dash").change(function () {
             let value = $("#Pago-dash").val()
+            $('#a-pago').attr('href', "/Gasto/Details?filter=pago&pago=" + value);
             $.getJSON("/Gasto/TPago", { id: value },
                 function (data) {
                     $("#label-pago").html("$" + data.total)
@@ -122,6 +123,7 @@
         });
         $("#Consumo-dash").change(function () {
             let value = $("#Consumo-dash").val()
+            $('#a-consumo').attr('href', "/Gasto/Details?filter=consumo&consumo=" + value);
             $.getJSON("/Gasto/TConsumo", { id: value },
                 function (data) {
                     $("#label-consumo").html("$" + data.total)

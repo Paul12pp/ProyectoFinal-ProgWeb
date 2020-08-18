@@ -1,0 +1,106 @@
+﻿@model PaginatedList<ProyectoFinal.Models.Gasto>
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="d-flex" id="content-wrapper">
+    <!-- Page Content -->
+    <div id="content" class="bg-grey w-100">
+        <section class="bg-light py-3 mt-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-9 col-md-8">
+                        <h1 class="font-weight-bold mb-0">Detalle y busquedad</h1>
+                        <p class="lead text-muted">Utiliza los filtros</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-mix py-3">
+            <div class="container">
+                <div class="card rounded-0">
+                    <div class="card-body">
+                        <form>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <input class=" form-control " />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <input class=" form-control " />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <input class=" form-control " />
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <input class=" form-control " />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <input class="btn btn-primary " type="button" value="Buscar" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <table class="table col-md-12">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["UserSort"]">Usuario</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["MontoSort"]">Monto</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["ConsumoSort"]">
+                                        Tipo Consumo
+                                    </a>
+                                </th>
+                                <th>
+                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["PagoSort"]">
+                                        Tipo Pago
+                                    </a>
+                                </th>
+                                <th>Observación</th>
+                                <th>Acción</th>
+                            </tr>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    @{
+                                        string id = item.IdUsuario;
+                                        IEnumerable<Consumo> consnumos = ViewBag.IdConsumo;
+                                        IEnumerable<Pago> pagos = ViewBag.IdPago;
+                                    }
+                                    <td>@item.IdGasto</td>
+                                    <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                                    <td>@UserManager.Users.FirstOrDefault(r => r.Id == id).UserName</td>
+                                    <td>$@item.Monto</td>
+                                    <td>@consnumos.FirstOrDefault(r => r.IdConsumo == item.IdConsumo).Descripcion</td>
+                                    <td>@pagos.FirstOrDefault(r => r.IdPago == item.IdPago).Descripcion</td>
+                                    <td>@item.Observacion</td>
+                                    <td>
+                                        <a asp-action="Create" asp-route-id="@item.IdGasto" class="btn btn-warning">Editar</a>
+                                        <a asp-action="Delete" asp-route-id="@item.IdGasto" class="btn btn-danger">Eliminar</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

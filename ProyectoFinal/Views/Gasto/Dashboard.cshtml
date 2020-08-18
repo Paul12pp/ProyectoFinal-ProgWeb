@@ -43,7 +43,7 @@
                                     <div class="col-lg-3 col-md-6 d-flex stat my-3">
                                         <div class="mx-auto">
                                             <h6 class="text-muted">Gastos del mes</h6>
-                                            <h3 class="font-weight-bold">$@ViewData["GastoM"]</h3>
+                                            <a asp-action="Details" asp-route-filter="month"><h3 class="font-weight-bold">$@ViewData["GastoM"]</h3></a>
                                             <h6 class="text-success"><i class="icon ion-md-arrow-dropup-circle"></i> 30.50%</h6>
                                         </div>
                                     </div>
@@ -57,7 +57,7 @@
                                     <div class="col-lg-3 col-md-6 d-flex stat my-3">
                                         <div class="mx-auto">
                                             <h6 class="text-muted">Gasto Total</h6>
-                                            <h3 class="font-weight-bold">$@ViewData["GastoT"]</h3>
+                                            <a asp-action="Details" asp-route-filter="total"><h3 class="font-weight-bold">$@ViewData["GastoT"]</h3></a>
                                             <h6 class="text-success"><i class="icon ion-md-arrow-dropup-circle"></i> 75.50%</h6>
                                         </div>
                                     </div>
@@ -110,14 +110,14 @@
                                             <div class="col-lg-auto col-md-2 d-flex stat pt-1">
                                                 <div class="mx-auto">
                                                     <h6 class="text-muted">Tipo de consumo</h6>
-                                                    <h3 class="font-weight-bold" id="label-consumo">$0.0</h3>
+                                                    <a href="#" id="a-consumo"><h3 class="font-weight-bold" id="label-consumo">$0.0</h3></a>
                                                     <select name="Consumos" id="Consumo-dash" class="form-control" asp-items="@(new SelectList(ViewBag.Consumos,"IdConsumo","Descripcion"))"></select>
                                                 </div>
                                             </div>
                                             <div class="col-lg-auto col-md-2 d-flex pt-1">
                                                 <div class="mx-auto">
                                                     <h6 class="text-muted">Tipo de pago</h6>
-                                                    <h3 class="font-weight-bold" id="label-pago">$0.0</h3>
+                                                    <a href="#" id="a-pagos"><h3 class="font-weight-bold" id="label-pago">$0.0</h3></a>
                                                     <select name="Pagos" id="Pago-dash" class="form-control" asp-items="@(new SelectList(ViewBag.Pagos,"IdPago","Descripcion"))"></select>
                                                 </div>
                                             </div>
