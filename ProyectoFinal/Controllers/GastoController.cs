@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -89,33 +90,52 @@ namespace ProyectoFinal.Controllers
             ViewData["Observaciones"] = _gasto.GetGastos("")
                 .Where(r => r.Observacion != "")
                 .Count();
+            ViewData["GastosC"] = _gasto.GetGastos("")
+                .Count();
             ViewBag.GastosR = _gasto.GetGastos("date_desc")
-                .Take(4);
+                .Take(5);
             ViewBag.Consumos = _consumo.GetConsumos("");
+            ViewBag.Pagos = _pago.GetPagos("");
+            ViewBag.Top = _gasto.GetGastos("")
+                .GroupBy(r => r.IdConsumo)
+                .OrderByDescending(r => r.Count())
+                .Select(r => r.Key).Take(3);
             return View();
         }
 
         // GET: Gasto/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult TConsumo(int id)
         {
-            return View();
+            var sum = _gasto.GetGastosByConsumo(id)
+                .Sum(r => r.Monto);
+            return Json(new { total = sum });
         }
 
-        // POST: Gasto/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult TPago(int id)
         {
-            try
-            {
-                // TODO: Add update logic here
+            var sum = _gasto.GetGastosByPago(id)
+                .Sum(r => r.Monto);
+            return Json(new { total = sum });
+        }
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+        public ActionResult TGraph()
+        {
+            var sum = _gasto.GetGastos("")
+                .GroupBy(r => r.Fecha.Month)
+                .OrderByDescending(r => r.Count())
+                .Select(r => r.Key).Take(4);
+            List<decimal> montos = new List<decimal>();
+            List<string> meses = new List<string>();
+            foreach (var item in sum)
             {
-                return View();
+               var monto = _gasto.GetGastos("")
+                        .Where(r => r.Fecha.Year == DateTime.Now.Year && r.Fecha.Month == item)
+                        .Sum(r => r.Monto);
+                montos.Add(monto);
+                meses.Add(CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(item));
+
             }
+            return Json(new { montos = montos, meses=meses });
         }
 
         // GET: Gasto/Delete/5

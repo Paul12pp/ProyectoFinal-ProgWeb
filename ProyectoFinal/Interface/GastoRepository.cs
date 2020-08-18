@@ -122,7 +122,9 @@ namespace ProyectoFinal.Interface
 
         public IEnumerable<Gasto> GetGastosByConsumo(int idconsumo)
         {
-            throw new NotImplementedException();
+            return _appDbContext.Gastos
+               .Where(r => r.IdConsumo == idconsumo)
+               .ToList();
         }
 
         public IEnumerable<Gasto> GetGastosByFilter(string sorter)
@@ -132,7 +134,9 @@ namespace ProyectoFinal.Interface
 
         public IEnumerable<Gasto> GetGastosByPago(int idpago)
         {
-            throw new NotImplementedException();
+            return _appDbContext.Gastos
+                .Where(r => r.IdPago == idpago)
+                .ToList();
         }
 
         public IQueryable<Gasto> GetGastosP(string sorter)

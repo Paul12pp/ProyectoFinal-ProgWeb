@@ -111,36 +111,78 @@
         //$('#Monto').bind('keyup paste', function () {
         //    this.value = this.value.replace(/[^0-9]/g, '');
         //});
-
-
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Ene 2020', 'Feb 2020', 'Mar 2020', 'Abr 2020'],
-                datasets: [{
-                    label: 'Consumos mensuales',
-                    data: [50, 100, 150, 200],
-                    backgroundColor: [
-                        '#76d6c9',
-                        '#46bdb9',
-                        '#27ab9c',
-                        '#0e6c73'
-                    ],
-                    maxBarThickness: 30,
-                    maxBarLength: 2
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+        $("#Pago-dash").change(function () {
+            let value = $("#Pago-dash").val()
+            $.getJSON("/Gasto/TPago", { id: value },
+                function (data) {
+                    $("#label-pago").html("$" + data.total)
                 }
-            }
+            );
+
         });
+        $("#Consumo-dash").change(function () {
+            let value = $("#Consumo-dash").val()
+            $.getJSON("/Gasto/TConsumo", { id: value },
+                function (data) {
+                    $("#label-consumo").html("$" + data.total)
+                }
+            );
+        })
+
+        $(document).ready(function () {
+            if (window.location.pathname === '/Gasto/Dashboard') {
+                var result = {};
+                $.getJSON("/Gasto/TGraph",
+                    function (data) {
+                        result = data;
+                        console.log(result)
+                    }
+                )
+                    .done(function () {
+                        console.log("second success");
+                        renderChart(result);
+                    })
+                    .fail(function () {
+                        console.log("error");
+                    })
+                    .always(function () {
+                        console.log("complete");
+                    });
+            }
+
+            function renderChart(result) {
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: result.meses,//['Ene 2020', 'Feb 2020', 'Mar 2020', 'Abr 2020'],
+                        datasets: [{
+                            label: 'Consumos mensuales',
+                            data: result.montos,//[50, 100, 150, 200],
+                            backgroundColor: [
+                                '#76d6c9',
+                                '#46bdb9',
+                                '#27ab9c',
+                                '#0e6c73'
+                            ],
+                            maxBarThickness: 30,
+                            maxBarLength: 2
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+        })
+        
+
     </script>
 
     @RenderSection("Scripts", required: false)
