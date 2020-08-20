@@ -4,7 +4,7 @@
     ViewData["Title"] = "Tipos de Consumos";
 }
 
-
+  
 @*<div class="container">
     <h2>Tipos de Consumos</h2>
     <hr />
@@ -123,6 +123,7 @@
                                         <label asp-for="Imagen" class="control-label"></label>
                                         <input asp-for="Imagen" type="text" class="form-control"  placeholder="Elegir una imagen...">
                                         <div class="invalid-feedback">No ha elegido una imagen</div>
+                                        <label class="label-ref">Referencia: https://www.flaticon.es/ ("Ruta de la imagen")</label>
                                     </div>
                                     <div class="form-group col-md-12">
                                         @*<label asp-for="FechaCreacion" class="control-label"></label>*@
@@ -177,8 +178,8 @@
                                         </td>
                                         <td>@item.FechaCreacion</td>
                                         <td>
-                                            <a asp-action="CreatePago" asp-route-id="@item.IdConsumo" class="btn btn-warning">Editar</a>
-                                            <a asp-action="DeletePago" asp-route-id="@item.IdConsumo" class="btn btn-danger">Eliminar</a>
+                                            <a asp-action="CreateConsumo" asp-route-id="@item.IdConsumo" class="btn btn-warning">Editar</a>
+                                            <a asp-action="DeleteConsumo" asp-route-id="@item.IdConsumo" class="btn btn-danger">Eliminar</a>
                                         </td>
                                     </tr>
                                 }
