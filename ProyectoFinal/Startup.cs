@@ -39,6 +39,7 @@ namespace ProyectoFinal
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<IPago, PagoRepository>();
             services.AddScoped<IConsumo, ConsumoRepository>();
