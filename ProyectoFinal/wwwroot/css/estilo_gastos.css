@@ -141,3 +141,16 @@ nav.active-navbar li a:active {
 .custom-mar{
     margin-left: 15px;
 }
+
+/*pad-down para padding y margin abajo*/
+
+.pad-down {
+    padding-bottom: 5rem;
+    height: 5vh;
+}
+
+.label-ref{
+    color: lightgray;
+    font-size: small;
+
+}
