@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using ProyectoFinal.Models;
 
 namespace ProyectoFinal.Controllers
 {
+    [Authorize]
     public class GastoController : Controller
     {
         private readonly IGasto _gasto;

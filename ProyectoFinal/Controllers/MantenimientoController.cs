@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Interface;
@@ -9,6 +10,7 @@ using ProyectoFinal.Models;
 
 namespace ProyectoFinal.Controllers
 {
+    [Authorize]
     public class MantenimientoController : Controller
     {
         private readonly IConsumo _consumo;
