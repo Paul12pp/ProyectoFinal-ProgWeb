@@ -49,15 +49,15 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label class="class=" control-label">Tipo Consumo</label>
-                                    @{ 
+                                    @{
                                         IEnumerable<Consumo> consnumos = ViewBag.IdConsumo;
                                         IEnumerable<Pago> pagos = ViewBag.IdPago;
                                     }
                                     @if (ViewBag.Model != null)
-                                            {
-                                                var idc = ViewBag.Model.IdConsumo;
+                                    {
+                                        var idc = ViewBag.Model.IdConsumo;
                                         <select name="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo, "IdConsumo", "Descripcion", consnumos.FirstOrDefault(r => r.IdConsumo == idc).IdConsumo))"></select>
-                                     }
+                                    }
                                     else
                                     {
                                         <select name="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo,"IdConsumo","Descripcion"))"></select>
@@ -66,12 +66,12 @@
                                 <div class="form-group col-md-3">
                                     <label class="class=" control-label">Forma de Pago</label>
                                     @if (ViewBag.Model != null)
-                                            {
-                                                var idp = ViewBag.Model.IdPago;
+                                    {
+                                        var idp = ViewBag.Model.IdPago;
                                         <select name="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago, "IdPago", "Descripcion", pagos.FirstOrDefault(r => r.IdPago == idp).IdPago))"></select>
                                     }
-                                        else
-                                        {
+                                    else
+                                    {
                                         <select name="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago,"IdPago","Descripcion"))"></select>
                                     }
                                 </div>
@@ -159,6 +159,54 @@
                             }
                         </tbody>
                     </table>
+                    @{
+                        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                    }
+                    <div class="text-center">
+                        @if (ViewBag.Model != null)
+                        {
+                            <a asp-action="Details"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(Model.PageIndex - 1)"
+                               asp-route-filter="@ViewData["CurrentFilter"]"
+                               asp-route-desde="@ViewBag.Model.Desde"
+                               asp-route-hasta="@ViewBag.Model.Hasta"
+                               asp-route-idConsumo="@ViewBag.Model.IdConsumo"
+                               asp-route-idPago="@ViewBag.Model.IdPago">
+                                class="btn btn-primary @prevDisabled">
+                                Atrás
+                            </a>
+                            <a asp-action="Details"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(Model.PageIndex + 1)"
+                               asp-route-filter="@ViewData["CurrentFilter"]"
+                               asp-route-desde="@ViewBag.Model.Desde"
+                               asp-route-hasta="@ViewBag.Model.Hasta"
+                               asp-route-idConsumo="@ViewBag.Model.IdConsumo"
+                               asp-route-idPago="@ViewBag.Model.IdPago"
+                               class="btn btn-primary @nextDisabled">
+                                Adelante
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Details"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(Model.PageIndex - 1)"
+                               asp-route-filter="@ViewData["CurrentFilter"]"
+                               class="btn btn-primary @prevDisabled">
+                                Atrás
+                            </a>
+                            <a asp-action="Details"
+                               asp-route-sortOrder="@ViewData["CurrentSort"]"
+                               asp-route-pageNumber="@(Model.PageIndex + 1)"
+                               asp-route-filter="@ViewData["CurrentFilter"]"
+                               class="btn btn-primary @nextDisabled">
+                                Adelante
+                            </a>
+                        }
+                    </div>
                 </div>
             </div>
         </section>
