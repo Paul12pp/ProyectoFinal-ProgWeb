@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using ProyectoFinal.Data;
 using ProyectoFinal.Models;
 
@@ -10,9 +12,14 @@ namespace ProyectoFinal.Interface
     public class GastoRepository : IGasto
     {
         private readonly ApplicationDbContext _appDbContext;
-        public GastoRepository(ApplicationDbContext appDbContext)
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public GastoRepository(ApplicationDbContext appDbContext,
+            UserManager<IdentityUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _appDbContext = appDbContext;
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public int AddGasto(Gasto model)
@@ -75,9 +82,13 @@ namespace ProyectoFinal.Interface
                 .FirstOrDefault(r => r.IdGasto == idgasto)
 ;        }
 
-        public IEnumerable<Gasto> GetGastos(string sorter)
+        public async Task<IEnumerable<Gasto>> GetGastos(string sorter)
         {
-            var pagos = _appDbContext.Gastos.ToList();
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin");
+            var pagos = role
+                ? _appDbContext.Gastos.ToList()
+                : _appDbContext.Gastos.Where(r => r.IdUsuario == user.Id).ToList();
             switch (sorter)
             {
                 case "code_desc":
@@ -120,17 +131,38 @@ namespace ProyectoFinal.Interface
             return pagos;
         }
 
-        public IEnumerable<Gasto> GetGastosByConsumo(int idconsumo)
+        public IEnumerable<Gasto> GetGastos(string iduser,bool role)
         {
-            return _appDbContext.Gastos
+
+            return role
+                ? _appDbContext.Gastos
+                .ToList()
+                : _appDbContext.Gastos
+                .Where(r => r.IdUsuario == iduser)
+                .ToList();
+        }
+
+        public IEnumerable<Gasto> GetGastosByConsumo(int idconsumo, string iduser, bool role)
+        {
+
+            return role
+                ? _appDbContext.Gastos
                .Where(r => r.IdConsumo == idconsumo)
+               .ToList()
+               : _appDbContext.Gastos
+               .Where(r => r.IdConsumo == idconsumo && r.IdUsuario == iduser)
                .ToList();
         }
 
-        public IQueryable<Gasto> GetGastosByFilter(string sorter, int? id)
+        public async Task<IQueryable<Gasto>> GetGastosByFilter(string sorter, int? id)
         {
-            var gastos = from s in _appDbContext.Gastos
-                        select s;
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin");
+            var gastos = role
+                ? from s in _appDbContext.Gastos
+                  select s
+                : from s in _appDbContext.Gastos.Where(r => r.IdUsuario == user.Id)
+                  select s;
             switch (sorter)
             {
                 case "month":
@@ -156,17 +188,27 @@ namespace ProyectoFinal.Interface
             return gastos;
         }
 
-        public IEnumerable<Gasto> GetGastosByPago(int idpago)
+        public IEnumerable<Gasto> GetGastosByPago(int idpago, string iduser, bool role)
         {
-            return _appDbContext.Gastos
+            return role
+                ? _appDbContext.Gastos
                 .Where(r => r.IdPago == idpago)
+                .ToList()
+                : _appDbContext.Gastos
+                .Where(r => r.IdPago == idpago && r.IdUsuario == iduser)
                 .ToList();
         }
 
-        public IQueryable<Gasto> GetGastosP(string sorter)
+        public async Task<IQueryable<Gasto>> GetGastosP(string sorter)
         {
-            var pagos = from s in _appDbContext.Gastos
-                             select s;
+
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin");
+            var pagos = role
+                ? from s in _appDbContext.Gastos
+                  select s
+                : from s in _appDbContext.Gastos.Where(r => r.IdUsuario == user.Id)
+                  select s;
             switch (sorter)
             {
                 case "code_desc":
@@ -210,10 +252,17 @@ namespace ProyectoFinal.Interface
 
         }
 
-        public IQueryable<Gasto> SearchGastos(SearchViewModel model)
+        public async Task<IQueryable<Gasto>> SearchGastos(SearchViewModel model)
         {
-            var gastos = from s in _appDbContext.Gastos
-                         select s;
+
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin");
+            var gastos = role
+                ? from s in _appDbContext.Gastos
+                  select s
+                : from s in _appDbContext.Gastos.Where(r => r.IdUsuario == user.Id)
+                  select s;
+
             return gastos
                 .Where(r => r.Fecha >= model.Desde && r.Fecha <= model.Hasta
                 && r.IdConsumo == model.IdConsumo && r.IdPago == r.IdPago);
@@ -224,7 +273,7 @@ namespace ProyectoFinal.Interface
             switch (sorter)
             {
                 case "date":
-                    pagos = pagos.OrderBy(s => s.Fecha);
+                    pagos =  pagos.OrderBy(s => s.Fecha);
                     break;
                 case "date_desc":
                     pagos = pagos.OrderByDescending(s => s.Fecha);

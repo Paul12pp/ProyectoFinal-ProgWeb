@@ -19,13 +19,16 @@ namespace ProyectoFinal.Controllers
         private readonly IConsumo _consumo;
         private readonly IPago _pago;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public GastoController(IGasto gasto, IConsumo consumo,
-            IPago pago, UserManager<IdentityUser> userManager)
+            IPago pago, UserManager<IdentityUser> userManager,
+             IHttpContextAccessor httpContextAccessor)
         {
             _gasto = gasto;
             _consumo = consumo;
             _pago = pago;
             _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
         // GET: Gasto
         public ActionResult Index()
@@ -46,9 +49,9 @@ namespace ProyectoFinal.Controllers
             ViewBag.IdPago = _pago.GetPagos("");
             var type = consumo != null ? consumo : pago;
             var gastos = filter != ""
-                ? _gasto.GetGastosByFilter(filter, type)
-                : _gasto.GetGastosP("");
-            gastos = sortOrder != "" ? _gasto.Sorter(gastos, sortOrder) : gastos;
+                ? await _gasto.GetGastosByFilter(filter, type)
+                : await _gasto.GetGastosP("");
+            gastos = sortOrder != "" ?  _gasto.Sorter(gastos, sortOrder) : gastos;
             if (desde != null)
             {
                 var model = new SearchViewModel
@@ -58,8 +61,8 @@ namespace ProyectoFinal.Controllers
                     IdConsumo = idconsumo,
                     IdPago = idpago
                 };
-                gastos = _gasto.SearchGastos(model);
-                gastos = sortOrder != "" ? _gasto.Sorter(gastos, sortOrder) : gastos;
+                gastos = await _gasto.SearchGastos(model);
+                gastos = sortOrder != "" ?  _gasto.Sorter(gastos, sortOrder) : gastos;
                 ViewBag.Model = model;
             }
             int pageSize = 5;
@@ -88,7 +91,7 @@ namespace ProyectoFinal.Controllers
             ViewBag.IdConsumo = _consumo.GetConsumos("");
             ViewBag.IdPago = _pago.GetPagos("");
             int pageSize = 5;
-            var data = sortOrder != "" ? _gasto.GetGastosP(sortOrder) : _gasto.GetGastosP("");
+            var data = sortOrder != "" ? await _gasto.GetGastosP(sortOrder) : await _gasto.GetGastosP("");
             ViewBag.Gastos = await PaginatedList<Gasto>.CreateAsync(data, pageNumber ?? 1, pageSize);
             if (id != null)
             {
@@ -102,7 +105,7 @@ namespace ProyectoFinal.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Gasto collection)
         {
-            var user =  _userManager.GetUserId(HttpContext.User);
+            var user =  _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
             collection.IdUsuario = user;
             if (ModelState.IsValid)
             {
@@ -116,24 +119,27 @@ namespace ProyectoFinal.Controllers
             return View(collection);
         }
 
-        public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin");
             ViewData["Message"] = "Dashboard.";
-            ViewData["GastoT"] = _gasto.GetGastos("")
+            ViewData["GastoT"] =  _gasto.GetGastos(user.Id, role)
                 .Sum(r => r.Monto);
-            ViewData["GastoM"] = _gasto.GetGastos("")
+            ViewData["GastoM"] =  _gasto.GetGastos(user.Id, role)
                 .Where(r => r.Fecha.Month == DateTime.Now.Month)
                 .Sum(r => r.Monto);
-            ViewData["Observaciones"] = _gasto.GetGastos("")
+            ViewData["Observaciones"] = _gasto.GetGastos(user.Id, role)
                 .Where(r => r.Observacion != "")
                 .Count();
-            ViewData["GastosC"] = _gasto.GetGastos("")
+            ViewData["GastosC"] = _gasto.GetGastos(user.Id, role)
                 .Count();
-            ViewBag.GastosR = _gasto.GetGastos("date_desc")
+            ViewBag.GastosR = _gasto.GetGastos(user.Id, role)
+                .OrderByDescending(r=>r.Fecha)
                 .Take(5);
             ViewBag.Consumos = _consumo.GetConsumos("");
             ViewBag.Pagos = _pago.GetPagos("");
-            ViewBag.Top = _gasto.GetGastos("")
+            ViewBag.Top = _gasto.GetGastos(user.Id, role)
                 .GroupBy(r => r.IdConsumo)
                 .OrderByDescending(r => r.Count())
                 .Select(r => r.Key).Take(3);
@@ -141,23 +147,29 @@ namespace ProyectoFinal.Controllers
         }
 
         // GET: Gasto/Edit/5
-        public ActionResult TConsumo(int id)
+        public async Task<ActionResult> TConsumo(int id)
         {
-            var sum = _gasto.GetGastosByConsumo(id)
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin");
+            var sum =  _gasto.GetGastosByConsumo(id, user.Id, role)
                 .Sum(r => r.Monto);
             return Json(new { total = sum });
         }
 
-        public ActionResult TPago(int id)
+        public async Task<ActionResult> TPago(int id)
         {
-            var sum = _gasto.GetGastosByPago(id)
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin");
+            var sum = _gasto.GetGastosByPago(id, user.Id, role)
                 .Sum(r => r.Monto);
             return Json(new { total = sum });
         }
 
-        public ActionResult TGraph()
+        public async Task<ActionResult> TGraph()
         {
-            var sum = _gasto.GetGastos("")
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var role = await  _userManager.IsInRoleAsync(user, "Admin");
+            var sum = _gasto.GetGastos(user.Id, role)
                 .GroupBy(r => r.Fecha.Month)
                 .OrderByDescending(r => r.Count())
                 .Select(r => r.Key).Take(4);
@@ -165,7 +177,7 @@ namespace ProyectoFinal.Controllers
             List<string> meses = new List<string>();
             foreach (var item in sum)
             {
-               var monto = _gasto.GetGastos("")
+               var monto = _gasto.GetGastos(user.Id, role)
                         .Where(r => r.Fecha.Year == DateTime.Now.Year && r.Fecha.Month == item)
                         .Sum(r => r.Monto);
                 montos.Add(monto);

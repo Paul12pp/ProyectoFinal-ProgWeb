@@ -36,33 +36,32 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                @{
+                    var user = await UserManager.GetUserAsync(User);
+                }
                 <li class="nav-item active">
                     <a asp-area="" asp-controller="Gasto" asp-action="Dashboard" class="nav-link">Dashboard <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
-                    <a asp-area="" asp-controller="Gasto" asp-action="Index" class="nav-link">Gastos</a>
-                </li>
+                @if (await UserManager.IsInRoleAsync(user, "Normal"))
+                {
+                    <li class="nav-item">
+                        <a asp-area="" asp-controller="Gasto" asp-action="Index" class="nav-link">Gastos</a>
+                    </li>
+                }
                 <li class="nav-item dropdown">
-                    @{
-                        var user = await UserManager.GetUserAsync(User);
-                    }
+
                     @if (await UserManager.IsInRoleAsync(user, "Admin"))
                     {
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Mantenimiento
                         </a>
                     }
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a asp-area="" asp-controller="Mantenimiento" asp-action="CreatePago" class="dropdown-item">Pagos</a>
-                            <div class="dropdown-divider"></div>
-                            <a asp-area="" asp-controller="Mantenimiento" asp-action="CreateConsumo" class="dropdown-item">Consumos</a>
-                        </div>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a asp-area="" asp-controller="Mantenimiento" asp-action="CreatePago" class="dropdown-item">Pagos</a>
+                        <div class="dropdown-divider"></div>
+                        <a asp-area="" asp-controller="Mantenimiento" asp-action="CreateConsumo" class="dropdown-item">Consumos</a>
+                    </div>
                 </li>
-
-                <!-- Search form -->
-                @*<input class="form-control" type="text" placeholder="Buscar...   " aria-label="Search" />*@
-                @*<li class="nav-item">
-                    </li>*@
                 <a class="btn p-0 ml-2" id="btn-search">
                     <span class="icon ion-ios-search" style="font-size:24px;"></span>
                 </a>
@@ -129,7 +128,9 @@
                 }
             );
         })
-
+        $("#btn-download").click(function () {
+            window.print();
+        })
         $("#btn-search").click(function () {
             let values = Swal.fire({
                 title: 'Buscador',

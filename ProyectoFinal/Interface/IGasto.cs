@@ -12,12 +12,13 @@ namespace ProyectoFinal.Interface
         int EditGasto(int idgasto, Gasto model);
         int DeleteGasto(int idgasto);
         Gasto GetGastoById(int idgasto);
-        IEnumerable<Gasto> GetGastos(string sorter);
-        IQueryable<Gasto> GetGastosP(string sorter);
-        IEnumerable<Gasto> GetGastosByConsumo(int idconsumo);
-        IEnumerable<Gasto> GetGastosByPago(int idpago);
-        IQueryable<Gasto> GetGastosByFilter(string sorter, int? id);
-        IQueryable<Gasto> SearchGastos(SearchViewModel model);
+        Task<IEnumerable<Gasto>> GetGastos(string sorter);
+        IEnumerable<Gasto> GetGastos(string iduser, bool role);
+        Task<IQueryable<Gasto>> GetGastosP(string sorter);
+        IEnumerable<Gasto> GetGastosByConsumo(int idconsumo, string iduser, bool role);
+        IEnumerable<Gasto> GetGastosByPago(int idpago, string iduser, bool role);
+        Task<IQueryable<Gasto>> GetGastosByFilter(string sorter, int? id);
+        Task<IQueryable<Gasto>> SearchGastos(SearchViewModel model);
         IQueryable<Gasto> Sorter(IQueryable<Gasto> gastos, string sorter);
     }
 }

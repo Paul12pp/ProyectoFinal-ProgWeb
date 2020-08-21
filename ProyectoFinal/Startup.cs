@@ -44,6 +44,7 @@ namespace ProyectoFinal
             services.AddScoped<IPago, PagoRepository>();
             services.AddScoped<IConsumo, ConsumoRepository>();
             services.AddScoped<IGasto, GastoRepository>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
