@@ -1,0 +1,19 @@
+﻿@inject SignInManager<IdentityUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+
+
+
+<div>
+    <ul class="navbar-nav mr-auto">
+        <li class="btn btn-primary mt-5"><a asp-page="./Index" class="text-white">Perfil</a></li>
+        <li class="active btn btn-primary mt-5"><a id="change-password" asp-page="./ChangePassword" class="text-white">Contraseña</a></li>
+        @if (hasExternalLogins)
+        {
+
+        }
+
+
+    </ul>
+</div>
