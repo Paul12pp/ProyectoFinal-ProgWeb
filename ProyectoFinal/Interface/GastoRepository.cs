@@ -218,5 +218,29 @@ namespace ProyectoFinal.Interface
                 .Where(r => r.Fecha >= model.Desde && r.Fecha <= model.Hasta
                 && r.IdConsumo == model.IdConsumo && r.IdPago == r.IdPago);
         }
+
+        public IQueryable<Gasto> Sorter(IQueryable<Gasto> pagos, string sorter)
+        {
+            switch (sorter)
+            {
+                case "date":
+                    pagos = pagos.OrderBy(s => s.Fecha);
+                    break;
+                case "date_desc":
+                    pagos = pagos.OrderByDescending(s => s.Fecha);
+                    break;
+                case "monto":
+                    pagos = pagos.OrderBy(s => s.Monto);
+                    break;
+                case "monto_desc":
+                    pagos = pagos.OrderByDescending(s => s.Monto);
+                    break;
+                default:
+                    pagos = pagos.OrderBy(s => s.IdGasto);
+                    break;
+
+            }
+            return pagos;
+        }
     }
 }

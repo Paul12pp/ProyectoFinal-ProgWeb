@@ -39,6 +39,7 @@ namespace ProyectoFinal.Controllers
             string hasta, int idconsumo, int idpago)
         {
             ViewData["CurrentSort"] = sortOrder;
+            ViewData["CurrentFilter"] = filter;
             ViewData["DateSort"] = sortOrder == "date" ? "date_desc" : "date";
             ViewData["MontoSort"] = sortOrder == "monto" ? "monto_desc" : "monto";
             ViewBag.IdConsumo = _consumo.GetConsumos("");
@@ -46,7 +47,8 @@ namespace ProyectoFinal.Controllers
             var type = consumo != null ? consumo : pago;
             var gastos = filter != ""
                 ? _gasto.GetGastosByFilter(filter, type)
-                : sortOrder != "" ? _gasto.GetGastosP(sortOrder) : _gasto.GetGastosP("");
+                : _gasto.GetGastosP("");
+            gastos = sortOrder != "" ? _gasto.Sorter(gastos, sortOrder) : gastos;
             if (desde != null)
             {
                 var model = new SearchViewModel
@@ -57,6 +59,7 @@ namespace ProyectoFinal.Controllers
                     IdPago = idpago
                 };
                 gastos = _gasto.SearchGastos(model);
+                gastos = sortOrder != "" ? _gasto.Sorter(gastos, sortOrder) : gastos;
                 ViewBag.Model = model;
             }
             int pageSize = 5;

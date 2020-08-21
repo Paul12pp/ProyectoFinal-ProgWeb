@@ -3,7 +3,7 @@
 
 @inject UserManager<IdentityUser> UserManager
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Busqueda";
 }
 
 <div class="d-flex" id="content-wrapper">
@@ -26,12 +26,26 @@
                         <form asp-action="Details" method="get">
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label class="class="control-label">Desde</label>
-                                    <input class=" form-control " type="date" name="Desde" required/>
+                                    <label class="class=" control-label">Desde</label>
+                                    @if (ViewBag.Model != null)
+                                    {
+                                        <input class=" form-control " type="date" name="Desde" required value="@ViewBag.Model.Desde.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
+                                    }
+                                    else
+                                    {
+                                        <input class=" form-control " type="date" name="Desde" required />
+                                    }
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label class="class=" control-label">Hasta</label>
-                                    <input class=" form-control " type="date" name="Hasta" required/>
+                                    @if (ViewBag.Model != null)
+                                    {
+                                        <input class=" form-control " type="date" name="Hasta" required value="@ViewBag.Model.Hasta.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)" />
+                                    }
+                                    else
+                                    {
+                                        <input class=" form-control " type="date" name="Hasta" required />
+                                    }
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label class="class=" control-label">Tipo Consumo</label>
@@ -42,7 +56,7 @@
                                     @if (ViewBag.Model != null)
                                             {
                                                 var idc = ViewBag.Model.IdConsumo;
-                                        <select name="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo, "IdConsumo", "Descripcion", consnumos.Select(r => r.IdConsumo == idc)))"></select>
+                                        <select name="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo, "IdConsumo", "Descripcion", consnumos.FirstOrDefault(r => r.IdConsumo == idc).IdConsumo))"></select>
                                      }
                                     else
                                     {
@@ -54,7 +68,7 @@
                                     @if (ViewBag.Model != null)
                                             {
                                                 var idp = ViewBag.Model.IdPago;
-                                        <select name="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago, "IdPago", "Descripcion", pagos.Select(r => r.IdPago == idp)))"></select>
+                                        <select name="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago, "IdPago", "Descripcion", pagos.FirstOrDefault(r => r.IdPago == idp).IdPago))"></select>
                                     }
                                         else
                                         {
@@ -76,19 +90,46 @@
                                     Código
                                 </th>
                                 <th>
-                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
+                                    @if (ViewBag.Model != null)
+                                    {
+                                        <a asp-action="Details" asp-route-sortOrder="@ViewData["DateSort"]"
+                                           asp-route-filter="@ViewData["CurrentFilter"]" asp-route-desde="@ViewBag.Model.Desde"
+                                           asp-route-hasta="@ViewBag.Model.Hasta"
+                                           asp-route-idConsumo="@ViewBag.Model.IdConsumo"
+                                           asp-route-idPago="@ViewBag.Model.IdPago">
+                                            Fecha
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Details" asp-route-sortOrder="@ViewData["DateSort"]" asp-route-filter="@ViewData["CurrentFilter"]">Fecha</a>
+                                    }
                                 </th>
                                 <th>
                                     Usuario
                                 </th>
                                 <th>
-                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["MontoSort"]">Monto</a>
+                                    @if (ViewBag.Model != null)
+                                    {
+                                        <a asp-action="Details" asp-route-sortOrder="@ViewData["MontoSort"]"
+                                           asp-route-filter="@ViewData["CurrentFilter"]"
+                                           asp-route-desde="@ViewBag.Model.Desde"
+                                           asp-route-hasta="@ViewBag.Model.Hasta"
+                                           asp-route-idConsumo="@ViewBag.Model.IdConsumo"
+                                           asp-route-idPago="@ViewBag.Model.IdPago">
+                                            Monto
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Details" asp-route-sortOrder="@ViewData["MontoSort"]" asp-route-filter="@ViewData["CurrentFilter"]">Monto</a>
+                                    }
                                 </th>
                                 <th>
-                                        Tipo Consumo
+                                    Tipo Consumo
                                 </th>
                                 <th>
-                                        Tipo Pago
+                                    Tipo Pago
                                 </th>
                                 <th>Observación</th>
                                 <th>Acción</th>
@@ -100,15 +141,15 @@
                                 <tr>
                                     @{
                                         string id = item.IdUsuario;
-                                        IEnumerable<Consumo> consnumos = ViewBag.IdConsumo;
-                                        IEnumerable<Pago> pagos = ViewBag.IdPago;
+                                        IEnumerable<Consumo> consnumoss = ViewBag.IdConsumo;
+                                        IEnumerable<Pago> pagoss = ViewBag.IdPago;
                                     }
                                     <td>@item.IdGasto</td>
                                     <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
                                     <td>@UserManager.Users.FirstOrDefault(r => r.Id == id).UserName</td>
                                     <td>$@item.Monto</td>
-                                    <td>@consnumos.FirstOrDefault(r => r.IdConsumo == item.IdConsumo).Descripcion</td>
-                                    <td>@pagos.FirstOrDefault(r => r.IdPago == item.IdPago).Descripcion</td>
+                                    <td>@consnumoss.FirstOrDefault(r => r.IdConsumo == item.IdConsumo).Descripcion</td>
+                                    <td>@pagoss.FirstOrDefault(r => r.IdPago == item.IdPago).Descripcion</td>
                                     <td>@item.Observacion</td>
                                     <td>
                                         <a asp-action="Create" asp-route-id="@item.IdGasto" class="btn btn-warning">Editar</a>

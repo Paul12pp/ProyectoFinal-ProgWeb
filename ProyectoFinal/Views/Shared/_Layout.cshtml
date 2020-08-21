@@ -148,7 +148,13 @@
                 preConfirm: () => {
                     if (document.getElementById('s-desde').value != "" && document.getElementById('s-hasta').value != ""
                         && document.getElementById('t-consumo').value != "" && document.getElementById('f-pago').value != "") {
-                        return[];
+                        let desde = document.getElementById('s-desde').value;
+                        let hasta = document.getElementById('s-hasta').value;
+                        let consumo = document.getElementById('t-consumo').value;
+                        let pago = document.getElementById('f-pago').value;
+                        console.log("Aqui")
+                        window.location.pathname = "/Gasto/Details" + decodeURIComponent("%3F")+"Desde=" + desde + "&Hasta=" + hasta + "&IdConsumo=" + consumo + "&IdPago=" + pago;
+                        encodeURI 
                     } else {
                         alerta();
                     }
@@ -196,7 +202,13 @@
                 preConfirm: () => {
                     if (document.getElementById('s-desde').value != "" && document.getElementById('s-hasta').value != ""
                         && document.getElementById('t-consumo').value != "" && document.getElementById('f-pago').value != "") {
-                        return [];
+                        let desde = document.getElementById('s-desde').value;
+                        let hasta = document.getElementById('s-hasta').value;
+                        let consumo = document.getElementById('t-consumo').value;
+                        let pago = document.getElementById('f-pago').value;
+                        console.log("Aqui")
+                        window.location.pathname = "/Gasto/Details?Desde=" + desde + "&Hasta=" + hasta + "&IdConsumo=" + consumo + "&IdPago=" + pago;
+                        //return [];
                     } else {
                         alerta();
                     }
