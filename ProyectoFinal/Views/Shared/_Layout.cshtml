@@ -52,11 +52,11 @@
                             Mantenimiento
                         </a>
                     }
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a asp-area="" asp-controller="Mantenimiento" asp-action="CreatePago" class="dropdown-item">Pagos</a>
-                        <div class="dropdown-divider"></div>
-                        <a asp-area="" asp-controller="Mantenimiento" asp-action="CreateConsumo" class="dropdown-item">Consumos</a>
-                    </div>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a asp-area="" asp-controller="Mantenimiento" asp-action="CreatePago" class="dropdown-item">Pagos</a>
+                            <div class="dropdown-divider"></div>
+                            <a asp-area="" asp-controller="Mantenimiento" asp-action="CreateConsumo" class="dropdown-item">Consumos</a>
+                        </div>
                 </li>
 
                 <!-- Search form -->
@@ -119,7 +119,6 @@
                     $("#label-pago").html("$" + data.total)
                 }
             );
-
         });
         $("#Consumo-dash").change(function () {
             let value = $("#Consumo-dash").val()
@@ -132,7 +131,6 @@
         })
 
         $("#btn-search").click(function () {
-            //alert("aqui")
             let values = Swal.fire({
                 title: 'Buscador',
                 html:
@@ -152,29 +150,19 @@
                         let hasta = document.getElementById('s-hasta').value;
                         let consumo = document.getElementById('t-consumo').value;
                         let pago = document.getElementById('f-pago').value;
-                        console.log("Aqui")
-                        window.location.pathname = "/Gasto/Details" + decodeURIComponent("%3F")+"Desde=" + desde + "&Hasta=" + hasta + "&IdConsumo=" + consumo + "&IdPago=" + pago;
-                        encodeURI 
+                        let url = "/Gasto/Details?Desde=" + desde + "&Hasta=" + hasta + "&IdConsumo=" + consumo + "&IdPago=" + pago;
+                        window.location.href = url;
                     } else {
                         alerta();
                     }
-                    //return [
-                    //    console.log(document.getElementById('s-desde').value),
-                    //    console.log(document.getElementById('s-hasta').value)
-                    //]
                 }
             })
-
-            //if (formValues) {
-            //    Swal.fire(JSON.stringify(formValues))
-            //}
-           
         })
         function getConsumos() {
             let data = "";
             console.log("consumos", Consumos)
             for (var i = 0; i < Consumos.length; i++) {
-                data += "<option value='" + Consumos[i].idConsumo + "'>" + Consumos[i].descripcion + "<option>";
+                data += "<option value='" + Consumos[i].idConsumo + "'>" + Consumos[i].descripcion + "</option>";
             }
             return data;
         }
@@ -182,7 +170,7 @@
             let data = "";
             console.log("consumos", Pagos)
             for (var i = 0; i < Pagos.length; i++) {
-                data += "<option value='" + Pagos[i].idPago + "'>" + Pagos[i].descripcion + "<option>";
+                data += "<option value='" + Pagos[i].idPago + "'>" + Pagos[i].descripcion + "</option>";
             }
             return data;
         }
@@ -206,9 +194,8 @@
                         let hasta = document.getElementById('s-hasta').value;
                         let consumo = document.getElementById('t-consumo').value;
                         let pago = document.getElementById('f-pago').value;
-                        console.log("Aqui")
-                        window.location.pathname = "/Gasto/Details?Desde=" + desde + "&Hasta=" + hasta + "&IdConsumo=" + consumo + "&IdPago=" + pago;
-                        //return [];
+                        let url = "/Gasto/Details?Desde=" + desde + "&Hasta=" + hasta + "&IdConsumo=" + consumo + "&IdPago=" + pago;
+                        window.location.href = url;
                     } else {
                         alerta();
                     }
@@ -283,7 +270,6 @@
                 });
             }
         })
-
 
     </script>
 
