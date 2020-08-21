@@ -60,13 +60,12 @@
                 </li>
 
                 <!-- Search form -->
-                <input class="form-control" type="text" placeholder="Buscar...   " aria-label="Search" />
+                @*<input class="form-control" type="text" placeholder="Buscar...   " aria-label="Search" />*@
                 @*<li class="nav-item">
-                        <a asp-area="" asp-controller="Gasto" asp-action="Dashboard" class="nav-link">Dashboard</a>
                     </li>*@
-                <li class="nav-item">
-                    @*<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>*@
-                </li>
+                <a class="btn p-0 ml-2" id="btn-search">
+                    <span class="icon ion-ios-search" style="font-size:24px;"></span>
+                </a>
             </ul>
             <partial name="_LoginPartial" />
         </div>
@@ -108,7 +107,10 @@
             integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js" integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <script>
+        let Consumos = null;
+        let Pagos = null;
         $("#Pago-dash").change(function () {
             let value = $("#Pago-dash").val()
             $('#a-pago').attr('href', "/Gasto/Details?filter=pago&pago=" + value);
@@ -129,13 +131,101 @@
             );
         })
 
+        $("#btn-search").click(function () {
+            //alert("aqui")
+            let values = Swal.fire({
+                title: 'Buscador',
+                html:
+                    '<label class="class="control-label"">Desde</label><input class="form-control" type="date" id="s-desde" />'+
+                    '<label class="class="control-label"">Hasta</label><input class="form-control" type="date" id="s-hasta" />'+
+                    '<label class="class=" control-label"">Tipo Consumo</label><select class="form-control" id="t-consumo"> '+
+                    getConsumos() +
+                    '</select>' +
+                    '<label class="class=" control-label"">Forma de Pago</label><select class="form-control" id="f-pago">' +
+                    getPagos()+
+                    '</select>',
+                focusConfirm: false,
+                preConfirm: () => {
+                    if (document.getElementById('s-desde').value != "" && document.getElementById('s-hasta').value != ""
+                        && document.getElementById('t-consumo').value != "" && document.getElementById('f-pago').value != "") {
+                        return[];
+                    } else {
+                        alerta();
+                    }
+                    //return [
+                    //    console.log(document.getElementById('s-desde').value),
+                    //    console.log(document.getElementById('s-hasta').value)
+                    //]
+                }
+            })
+
+            //if (formValues) {
+            //    Swal.fire(JSON.stringify(formValues))
+            //}
+           
+        })
+        function getConsumos() {
+            let data = "";
+            console.log("consumos", Consumos)
+            for (var i = 0; i < Consumos.length; i++) {
+                data += "<option value='" + Consumos[i].idConsumo + "'>" + Consumos[i].descripcion + "<option>";
+            }
+            return data;
+        }
+        function getPagos() {
+            let data = "";
+            console.log("consumos", Pagos)
+            for (var i = 0; i < Pagos.length; i++) {
+                data += "<option value='" + Pagos[i].idPago + "'>" + Pagos[i].descripcion + "<option>";
+            }
+            return data;
+        }
+        function alerta() {
+            Swal.fire({
+                title: 'Buscador',
+                html:
+                    '<label class="class="control-label"">Desde</label><input class="form-control" type="date" id="s-desde" />' +
+                    '<label class="class="control-label"">Hasta</label><input class="form-control" type="date" id="s-hasta" />' +
+                    '<label class="class=" control-label"">Tipo Consumo</label><select class="form-control" id="t-consumo">' +
+                    getConsumos() +
+                    '</select>' +
+                    '<label class="class=" control-label"">Forma de Pago</label><select class="form-control" id="f-pago">' +
+                    getPagos()+
+                    '</select>',
+                focusConfirm: false,
+                preConfirm: () => {
+                    if (document.getElementById('s-desde').value != "" && document.getElementById('s-hasta').value != ""
+                        && document.getElementById('t-consumo').value != "" && document.getElementById('f-pago').value != "") {
+                        return [];
+                    } else {
+                        alerta();
+                    }
+                }
+            })
+        }
+
         $(document).ready(function () {
+            if (window.location.pathname === '/Gasto/Details') {
+                $("#btn-search").hide();
+            }
+            if (window.location.pathname != '/Gasto/Details') {
+                $.getJSON("/Gasto/AllPagos",
+                    function (data) {
+                        Pagos = data.pagos;
+                    }
+                );
+                $.getJSON("/Gasto/AllConsumos",
+                    function (data) {
+                        Consumos = data.consumos;
+                    }
+                );
+            }
             if (window.location.pathname === '/Gasto/Dashboard') {
                 var result = {};
                 $.getJSON("/Gasto/TGraph",
                     function (data) {
                         result = data;
-                        console.log(result)
+                        //console.log(result)
                     }
                 )
                     .done(function () {

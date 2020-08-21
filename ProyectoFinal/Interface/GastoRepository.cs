@@ -209,5 +209,14 @@ namespace ProyectoFinal.Interface
             return pagos;
 
         }
+
+        public IQueryable<Gasto> SearchGastos(SearchViewModel model)
+        {
+            var gastos = from s in _appDbContext.Gastos
+                         select s;
+            return gastos
+                .Where(r => r.Fecha >= model.Desde && r.Fecha <= model.Hasta
+                && r.IdConsumo == model.IdConsumo && r.IdPago == r.IdPago);
+        }
     }
 }

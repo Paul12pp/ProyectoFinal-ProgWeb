@@ -23,28 +23,48 @@
             <div class="container">
                 <div class="card rounded-0">
                     <div class="card-body">
-                        <form>
+                        <form asp-action="Details" method="get">
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <label class="class="control-label"">Desde</label>
-                                    <input class=" form-control " type="date" />
+                                    <label class="class="control-label">Desde</label>
+                                    <input class=" form-control " type="date" name="Desde" required/>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label class="class=" control-label"">Hasta</label>
-                                    <input class=" form-control " type="date" />
+                                    <label class="class=" control-label">Hasta</label>
+                                    <input class=" form-control " type="date" name="Hasta" required/>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label class="class=" control-label"">Tipo Consumo</label>
-                                    <select class=" form-control "></select>
+                                    <label class="class=" control-label">Tipo Consumo</label>
+                                    @{ 
+                                        IEnumerable<Consumo> consnumos = ViewBag.IdConsumo;
+                                        IEnumerable<Pago> pagos = ViewBag.IdPago;
+                                    }
+                                    @if (ViewBag.Model != null)
+                                            {
+                                                var idc = ViewBag.Model.IdConsumo;
+                                        <select name="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo, "IdConsumo", "Descripcion", consnumos.Select(r => r.IdConsumo == idc)))"></select>
+                                     }
+                                    else
+                                    {
+                                        <select name="IdConsumo" class="form-control" asp-items="@(new SelectList(ViewBag.IdConsumo,"IdConsumo","Descripcion"))"></select>
+                                    }
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label class="class=" control-label"">Forma de Pago</label>
-                                    <select class=" form-control "></select>
+                                    <label class="class=" control-label">Forma de Pago</label>
+                                    @if (ViewBag.Model != null)
+                                            {
+                                                var idp = ViewBag.Model.IdPago;
+                                        <select name="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago, "IdPago", "Descripcion", pagos.Select(r => r.IdPago == idp)))"></select>
+                                    }
+                                        else
+                                        {
+                                        <select name="IdPago" class="form-control" asp-items="@(new SelectList(ViewBag.IdPago,"IdPago","Descripcion"))"></select>
+                                    }
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <input class="btn btn-primary " type="button" value="Buscar" />
+                                    <input class="btn btn-primary " type="submit" value="Buscar" />
                                 </div>
                             </div>
                         </form>
@@ -53,30 +73,25 @@
                         <thead>
                             <tr>
                                 <th scope="col">
-                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["CodeSort"]">Código</a>
+                                    Código
                                 </th>
                                 <th>
                                     <a asp-action="Details" asp-route-sortOrder="@ViewData["DateSort"]">Fecha</a>
                                 </th>
                                 <th>
-                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["UserSort"]">Usuario</a>
+                                    Usuario
                                 </th>
                                 <th>
                                     <a asp-action="Details" asp-route-sortOrder="@ViewData["MontoSort"]">Monto</a>
                                 </th>
                                 <th>
-                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["ConsumoSort"]">
                                         Tipo Consumo
-                                    </a>
                                 </th>
                                 <th>
-                                    <a asp-action="Details" asp-route-sortOrder="@ViewData["PagoSort"]">
                                         Tipo Pago
-                                    </a>
                                 </th>
                                 <th>Observación</th>
                                 <th>Acción</th>
-                            </tr>
                             </tr>
                         </thead>
                         <tbody>

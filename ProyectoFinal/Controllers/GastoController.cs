@@ -35,24 +35,41 @@ namespace ProyectoFinal.Controllers
 
         // GET: Gasto/Details/5
         public async Task<IActionResult> Details(string filter, int? consumo,
-            int? pago, int? pageNumber, string sortOrder)
+            int? pago, int? pageNumber, string sortOrder, string desde, 
+            string hasta, int idconsumo, int idpago)
         {
             ViewData["CurrentSort"] = sortOrder;
-            ViewData["CodeSort"] = String.IsNullOrEmpty(sortOrder) ? "code_desc" : "";
             ViewData["DateSort"] = sortOrder == "date" ? "date_desc" : "date";
-            ViewData["UserSort"] = sortOrder == "user" ? "user_desc" : "user";
             ViewData["MontoSort"] = sortOrder == "monto" ? "monto_desc" : "monto";
-            ViewData["ConsumoSort"] = sortOrder == "consumo" ? "consumo_desc" : "consumo";
-            ViewData["PagoSort"] = sortOrder == "pago" ? "pago_desc" : "pago";
+            ViewBag.IdConsumo = _consumo.GetConsumos("");
+            ViewBag.IdPago = _pago.GetPagos("");
             var type = consumo != null ? consumo : pago;
             var gastos = filter != ""
                 ? _gasto.GetGastosByFilter(filter, type)
                 : sortOrder != "" ? _gasto.GetGastosP(sortOrder) : _gasto.GetGastosP("");
-            ViewBag.IdConsumo = _consumo.GetConsumos("");
-            ViewBag.IdPago = _pago.GetPagos("");
+            if (desde != null)
+            {
+                var model = new SearchViewModel
+                {
+                    Desde = Convert.ToDateTime(desde),
+                    Hasta = Convert.ToDateTime(hasta),
+                    IdConsumo = idconsumo,
+                    IdPago = idpago
+                };
+                gastos = _gasto.SearchGastos(model);
+                ViewBag.Model = model;
+            }
             int pageSize = 5;
             return View(await PaginatedList<Gasto>.CreateAsync(gastos, pageNumber ?? 1, pageSize));
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Details(SearchViewModel model)
+        //{
+        //    var gasto = _gasto.SearchGastos(model);
+        //    return View((await PaginatedList<Gasto>.CreateAsync(gasto, pageNumber ?? 1, pageSize));
+        //}
 
         // GET: Gasto/Create
         public async Task<IActionResult> Create(int? id, string sortOrder, 
@@ -153,6 +170,18 @@ namespace ProyectoFinal.Controllers
 
             }
             return Json(new { montos = montos, meses=meses });
+        }
+
+        public ActionResult AllConsumos()
+        {
+            var consumos = _consumo.GetConsumos("");
+            return Json(new { consumos = consumos});
+        }
+
+        public ActionResult AllPagos()
+        {
+            var pagos = _pago.GetPagos("");
+            return Json(new { pagos = pagos });
         }
 
         // GET: Gasto/Delete/5
